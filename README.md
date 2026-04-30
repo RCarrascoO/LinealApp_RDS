@@ -1,2 +1,2 @@
 # LinealApp_RDS
-Repositorio para EID Algebra Lineal 2026
+Repositorio para EID Introducción al Calculo 2026
