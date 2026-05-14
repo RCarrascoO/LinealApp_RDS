@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linealapp_web
+    ports:
+      - "3000:3000"
+    volumes:
+      # Sincroniza el código local con el contenedor
+      - .:/app
+      # Evita sobreescribir los node_modules del contenedor con los del host
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
