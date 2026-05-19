@@ -1,3 +1,5 @@
+'use client';
+
 import { RutForm } from '@/components/RutForm';
 
 export default function Home() {

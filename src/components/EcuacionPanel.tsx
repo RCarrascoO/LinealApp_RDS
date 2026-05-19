@@ -1,3 +1,11 @@
+// =========================================================================
+// ⚠️ AVISO PARA PERSONA 3:
+// Este archivo fue generado en una iteración temprana. 
+// Actualmente tus responsabilidades (Tarea 3.1) se están manejando en el 
+// panel derecho. Revisa si necesitas integrar este panel en tus componentes
+// o si prefieres eliminarlo y usar 'panel-resultados-conicas.tsx'.
+// =========================================================================
+
 import React from 'react';
 
 type Coeficientes = { A: number; B: number; C: number; D: number; E: number };
@@ -10,36 +18,26 @@ interface Props {
 
 export function EcuacionPanel({ coeficientes, pasosConstruccion, tipoConica }: Props) {
   const { A, B, C, D, E } = coeficientes;
-  const badgeClases = {
-    circunferencia: 'bg-emerald-100 text-emerald-800',
-    elipse: 'bg-sky-100 text-sky-800',
-    hiperbola: 'bg-amber-100 text-amber-800',
-    parabola: 'bg-violet-100 text-violet-800',
-    ninguna: 'bg-slate-100 text-slate-700'
-  } as const;
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h2 className="mb-4 text-xl font-bold text-slate-900">Ecuación General</h2>
-      <div className="mb-4 rounded-xl bg-slate-950 px-4 py-3 font-mono text-sm text-slate-50 md:text-base">
-        <span className={A === 0 ? 'text-red-300' : ''}>{A}x²</span> {' '}
-        <span className={B === 0 ? 'text-sky-300' : ''}>{B >= 0 ? '+' : '-'} {Math.abs(B)}y²</span> {' '}
-        <span>{C >= 0 ? '+' : '-'} {Math.abs(C)}x</span> {' '}
-        <span>{D >= 0 ? '+' : '-'} {Math.abs(D)}y</span> {' '}
-        <span>{E >= 0 ? '+' : '-'} {Math.abs(E)}</span> = 0
+    <div className="p-4 border rounded shadow">
+      <h2 className="text-xl font-bold mb-4">Ecuación General</h2>
+      <div className="text-2xl mb-4 font-mono">
+        <span style={{ color: A === 0 ? 'red' : 'inherit' }}>{A}x²</span> +{' '}
+        <span style={{ color: B === 0 ? 'blue' : 'inherit' }}>{B}y²</span> + {C}x + {D}y + {E} = 0
       </div>
       
       {tipoConica && (
         <div className="mb-4">
-          <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${badgeClases[tipoConica as keyof typeof badgeClases] ?? badgeClases.ninguna}`}>
+          <span className="inline-block px-3 py-1 rounded bg-gray-200 text-gray-800 font-semibold uppercase text-sm">
             {tipoConica}
           </span>
         </div>
       )}
 
       <details className="mt-4">
-        <summary className="cursor-pointer font-semibold text-slate-700">Ver construcción paso a paso</summary>
-        <ol className="mt-2 list-inside list-decimal rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
+        <summary className="cursor-pointer font-semibold text-blue-600">Ver construcción paso a paso</summary>
+        <ol className="p-4 list-decimal list-inside bg-gray-50 rounded mt-2">
           {pasosConstruccion.map((paso, idx) => (
             <li key={idx} className="mb-1">{paso}</li>
           ))}
