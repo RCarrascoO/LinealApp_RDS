@@ -20,10 +20,10 @@ export function validarRUT(rut: string): ValidacionRutResult {
   }
 
   // El cuerpo del RUT chileno puede tener hasta 8 dígitos; para aplicar una serie
-  // fija en Módulo 11 lo normalizamos a 8 posiciones con ceros a la izquierda.
+  // fija en Modulo 11 lo normalizamos a 8 posiciones con ceros a la izquierda.
   const cuerpo = cuerpoSinNormalizar.padStart(8, "0");
   const digitos = cuerpo.split("").map((d) => Number(d));
-  // Multiplicadores Módulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
+  // Multiplicadores Modulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
   const multiplicadores = [2, 3, 4, 5, 6, 7, 2, 3];
   let sumaTotal = 0;
 
