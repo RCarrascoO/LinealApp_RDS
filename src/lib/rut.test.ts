@@ -42,8 +42,8 @@ const casos: RutCase[] = [
   },
 ];
 
-test("validarRUT cubre casos válidos, inválidos y bordes DV 0/K", () => {
-  for (const caso of casos) {
+for (const caso of casos) {
+  test(`validarRUT: ${caso.nombre}`, () => {
     const resultado = validarRUT(caso.rut);
     assert.equal(
       resultado.valido,
@@ -55,5 +55,5 @@ test("validarRUT cubre casos válidos, inválidos y bordes DV 0/K", () => {
       caso.vEsperado,
       `[${caso.nombre}] v esperado=${caso.vEsperado}, recibido=${resultado.v}`
     );
-  }
-});
+  });
+}

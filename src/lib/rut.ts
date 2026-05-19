@@ -19,8 +19,8 @@ export function validarRUT(rut: string): ValidacionRutResult {
     return { valido: false, pasos: ["El cuerpo del RUT no puede superar 8 dígitos."], v: 0 };
   }
 
-  // El enunciado del sprint trabaja con 8 dígitos para construir coeficientes,
-  // por eso normalizamos el cuerpo a longitud fija de 8 con ceros a la izquierda.
+  // El cuerpo del RUT chileno puede tener hasta 8 dígitos; para aplicar una serie
+  // fija en Módulo 11 lo normalizamos a 8 posiciones con ceros a la izquierda.
   const cuerpo = cuerpoSinNormalizar.padStart(8, "0");
   const digitos = cuerpo.split("").map((d) => Number(d));
   // Multiplicadores Módulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
@@ -32,7 +32,7 @@ export function validarRUT(rut: string): ValidacionRutResult {
 
   for (let i = 7; i >= 0; i--) {
     const digito = digitos[i];
-    // 7 - i invierte el índice para consumir multiplicadores desde la derecha.
+    // Invertimos índice: posición 7 usa multiplicadores[0]=2, posición 0 usa [7]=3.
     const multiplicador = multiplicadores[7 - i];
     const producto = digito * multiplicador;
     sumaTotal += producto;
