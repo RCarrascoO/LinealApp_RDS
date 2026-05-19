@@ -1,4 +1,6 @@
 import { validarRUT } from "./rut";
+import assert from "node:assert/strict";
+import test from "node:test";
 
 type RutCase = {
   nombre: string;
@@ -40,18 +42,18 @@ const casos: RutCase[] = [
   },
 ];
 
-function runRutCases() {
+test("validarRUT cubre casos válidos, inválidos y bordes DV 0/K", () => {
   for (const caso of casos) {
     const resultado = validarRUT(caso.rut);
-    if (resultado.valido !== caso.validoEsperado) {
-      throw new Error(
-        `[${caso.nombre}] válido esperado=${caso.validoEsperado}, recibido=${resultado.valido}`
-      );
-    }
-    if (resultado.v !== caso.vEsperado) {
-      throw new Error(`[${caso.nombre}] v esperado=${caso.vEsperado}, recibido=${resultado.v}`);
-    }
+    assert.equal(
+      resultado.valido,
+      caso.validoEsperado,
+      `[${caso.nombre}] válido esperado=${caso.validoEsperado}, recibido=${resultado.valido}`
+    );
+    assert.equal(
+      resultado.v,
+      caso.vEsperado,
+      `[${caso.nombre}] v esperado=${caso.vEsperado}, recibido=${resultado.v}`
+    );
   }
-}
-
-runRutCases();
+});
