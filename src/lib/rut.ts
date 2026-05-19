@@ -1,82 +1,70 @@
-export function validarRUT(rut: string): { valido: boolean; pasos: string[]; v: number } {
+export type ValidacionRutResult = { valido: boolean; pasos: string[]; v: number };
+
+export function validarRUT(rut: string): ValidacionRutResult {
   const pasos: string[] = [];
-  
-  // Limpiar y preparar el texto
-  // Quitamos puntos y guiones. Solo dejamos números y la letra K (mayúscula).
-  const rutLimpio = rut.replace(/[^0-9kK]/g, '').toUpperCase();
-  
-  // Si quedó muy corto, no es un RUT válido
+  const rutLimpio = rut.replace(/[^0-9kK]/g, "").toUpperCase();
+
   if (rutLimpio.length < 2) {
     return { valido: false, pasos: ["RUT demasiado corto para analizar."], v: 0 };
   }
 
-  // Separamos el número (cuerpo) del dígito verificador (DV)
-  const cuerpo = rutLimpio.slice(0, -1);
+  const cuerpoSinNormalizar = rutLimpio.slice(0, -1);
   const dvIngresado = rutLimpio.slice(-1);
-  
-  pasos.push(`RUT procesado: ${cuerpo}-${dvIngresado}`);
 
-  // Multiplicar y sumar la serie de multiplicadores (2, 3, 4, 5, 6, 7) aplicados a cada dígito del cuerpo
-  let sumaTotal = 0;
-  let serie = 2;
-  
-  // Recorremos los números del cuerpo de derecha a izquierda (desde el final hacia el principio)
-  for (let i = cuerpo.length - 1; i >= 0; i--) {
-    const numeroActual = parseInt(cuerpo[i], 10);
-    const resultadoMultiplicacion = numeroActual * serie;
-    
-    sumaTotal += resultadoMultiplicacion;
-    pasos.push(`${numeroActual} × ${serie} = ${resultadoMultiplicacion}`);
-    
-    // La serie sube de 1 en 1. Si llega a 7, vuelve a caer a 2.
-    if (serie === 7) {
-      serie = 2;
-    } else {
-      serie = serie + 1;
-    }
+  if (!/^\d+$/.test(cuerpoSinNormalizar)) {
+    return { valido: false, pasos: ["El cuerpo del RUT debe contener solo dígitos."], v: 0 };
   }
-  
+
+  if (cuerpoSinNormalizar.length > 8) {
+    return { valido: false, pasos: ["El cuerpo del RUT no puede superar 8 dígitos."], v: 0 };
+  }
+
+  // El cuerpo del RUT chileno puede tener hasta 8 dígitos; para aplicar una serie
+  // fija en Modulo 11 lo normalizamos a 8 posiciones con ceros a la izquierda.
+  const cuerpo = cuerpoSinNormalizar.padStart(8, "0");
+  const digitos = cuerpo.split("").map((d) => Number(d));
+  // Multiplicadores Modulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
+  const multiplicadores = [2, 3, 4, 5, 6, 7, 2, 3];
+  let sumaTotal = 0;
+
+  pasos.push(`RUT procesado: ${cuerpo}-${dvIngresado}`);
+  pasos.push(`Serie usada (derecha a izquierda): [2, 3, 4, 5, 6, 7, 2, 3]`);
+
+  for (let i = 7; i >= 0; i--) {
+    const digito = digitos[i];
+    // Invertimos índice: posición 7 usa multiplicadores[0]=2, posición 0 usa [7]=3.
+    const multiplicador = multiplicadores[7 - i];
+    const producto = digito * multiplicador;
+    sumaTotal += producto;
+    pasos.push(`${digito} × ${multiplicador} = ${producto}`);
+  }
+
   pasos.push(`Suma total: ${sumaTotal}`);
-  
-  // Matemáticas del Módulo 11 
-  // Calculamos el residuo o "resto" de dividir la suma total entre 11
   const residuo = sumaTotal % 11;
   pasos.push(`Residuo de ${sumaTotal} / 11 = ${residuo}`);
-  
-  // Restamos 11 menos el residuo obtenido
-  const restaFinal = 11 - residuo;
-  
-  // Determinar el DV esperado 
-  let dvEsperado = restaFinal.toString();
-  
-  // Reglas especiales del algoritmo Módulo 11:
-  if (restaFinal === 11) {
-    dvEsperado = '0';
-  } else if (restaFinal === 10) {
-    dvEsperado = 'K';
-  }
-  
-  pasos.push(`11 - ${residuo} = ${restaFinal} → DV esperado: ${dvEsperado}`);
-  
-  // Resultado final
-  // Comparamos el DV que ingresó el usuario con el que calculamos nosotros
-  const esValido = dvIngresado === dvEsperado;
-  
-  if (esValido) {
-    pasos.push(`DV ingresado: ${dvIngresado} (Coincide, RUT válido)`);
+
+  const dvNumerico = 11 - residuo;
+  let dvEsperado = "";
+
+  if (dvNumerico === 11) {
+    dvEsperado = "0";
+  } else if (dvNumerico === 10) {
+    dvEsperado = "K";
   } else {
-    pasos.push(`DV ingresado: ${dvIngresado} (No coincide, RUT inválido)`);
-  }
-  
-  // Asignar el valor de la variable 'v' según el DV esperado
-  let v = 0;
-  if (dvEsperado === 'K') {
-    v = 10;
-  } else if (dvEsperado === '0') {
-    v = 11;
-  } else {
-    v = parseInt(dvEsperado, 10);
+    dvEsperado = String(dvNumerico);
   }
 
-  return { valido: esValido, pasos: pasos, v: v };
+  pasos.push(`11 - ${residuo} = ${dvNumerico} → DV esperado: ${dvEsperado}`);
+
+  const valido = dvEsperado === dvIngresado;
+  pasos.push(
+    valido
+      ? `DV ingresado: ${dvIngresado} (Coincide, RUT válido)`
+      : `DV ingresado: ${dvIngresado} (No coincide, RUT inválido)`
+  );
+
+  const v = dvEsperado === "K" ? 10 : dvEsperado === "0" ? 11 : Number(dvEsperado);
+  pasos.push(`Valor auxiliar v: ${v}`);
+
+  return { valido, pasos, v };
 }
