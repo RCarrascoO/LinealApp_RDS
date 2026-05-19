@@ -89,12 +89,12 @@ export function RutForm({ onValidated }: RutFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-6 bg-white rounded-lg shadow-md border border-gray-200">
-      <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Validación de RUT</h2>
+    <div className="w-full rounded-[14px] border border-border bg-card p-6 shadow-[0_8px_24px_rgba(17,24,39,0.08)]">
+      <h2 className="mb-4 text-center text-[24px] font-bold leading-8 text-foreground">Validación de RUT</h2>
       
       <form onSubmit={manejarValidacion} className="space-y-4">
         <div>
-          <label htmlFor="rut" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="rut" className="mb-1 block text-sm font-medium text-muted-foreground">
             Ingresa tu RUT
           </label>
           <input
@@ -104,43 +104,43 @@ export function RutForm({ onValidated }: RutFormProps) {
             onChange={manejarCambioDeTexto}
             placeholder="Ej: 12.345.678-9"
             maxLength={12}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none transition-colors
-              ${esValido === true ? 'border-green-500 focus:border-green-600 bg-green-50 text-green-900' : ''}
-              ${esValido === false ? 'border-red-500 focus:border-red-600 bg-red-50 text-red-900' : ''}
-              ${esValido === null ? 'border-gray-300 focus:border-blue-500 bg-white text-gray-900' : ''}
+            className={`w-full rounded-[10px] border px-4 py-2 text-sm outline-none transition-colors focus:ring-2
+              ${esValido === true ? 'border-success bg-green-50 text-foreground focus:border-success focus:ring-success/20' : ''}
+              ${esValido === false ? 'border-destructive bg-red-50 text-foreground focus:border-destructive focus:ring-destructive/20' : ''}
+              ${esValido === null ? 'border-input bg-card text-foreground focus:border-primary focus:ring-primary/20' : ''}
             `}
           />
         </div>
 
         <button 
           type="submit" 
-          className="w-full py-2 px-4 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition-colors font-medium border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+          className="w-full rounded-[10px] border border-transparent bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#1D4ED8] active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
         >
           Validar
         </button>
 
         {/* Mensajes de retroalimentación principal */}
-        {error && <p className="text-red-600 text-sm font-medium mt-2">❌ {error}</p>}
-        {esValido === true && <p className="text-green-600 text-sm font-medium mt-2">✅ RUT válido. Generando cónica...</p>}
+        {error && <p className="mt-2 text-sm font-medium text-destructive">❌ {error}</p>}
+        {esValido === true && <p className="mt-2 text-sm font-medium text-success">✅ RUT válido. Generando cónica...</p>}
       </form>
 
       {/* Acordeón para los Pasos del Módulo 11 */}
       {pasos.length > 0 && (
-        <div className="mt-6 border border-gray-200 rounded-md overflow-hidden">
+        <div className="mt-6 overflow-hidden rounded-[14px] border border-border">
           <button
             type="button"
             onClick={() => setMostrarPasos(!mostrarPasos)}
-            className="w-full px-4 py-3 bg-gray-50 flex justify-between items-center text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+            className="flex w-full items-center justify-between bg-muted px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-[#E5E7EB]"
           >
             <span>Ver algoritmo Módulo 11 paso a paso</span>
-            <span>{mostrarPasos ? '▲' : '▼'}</span>
+            <span className={`transition-transform ${mostrarPasos ? 'rotate-180' : ''}`}>▼</span>
           </button>
           
           {mostrarPasos && (
-            <div className="px-4 py-3 bg-white text-sm text-gray-600 border-t border-gray-200 max-h-60 overflow-y-auto">
-              <ul className="list-disc pl-5 space-y-1">
+            <div className="max-h-60 overflow-y-auto border-t border-border bg-card px-4 py-3 text-sm text-muted-foreground">
+              <ul className="list-disc space-y-1 pl-5">
                 {pasos.map((paso, index) => (
-                  <li key={index} className="font-mono text-xs">{paso}</li>
+                  <li key={index} className="font-mono text-xs text-foreground">{paso}</li>
                 ))}
               </ul>
             </div>

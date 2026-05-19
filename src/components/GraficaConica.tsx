@@ -147,22 +147,9 @@ export function GraficaConica({ resultado }: Props) {
     const c = raizCuadrada(a * a + b * b);
     const puntos = puntosHiperbola(h, k, a, b, formaCanonica.eje === 'horizontal', 40, 0.1);
 
-    // Dibujar la hipérbola desde los puntos calculados
-    if (puntos.puntos && puntos.puntos.length > 0) {
-      const puntosPath = puntos.puntos
-        .map((p) => `${p.x},${p.y}`)
-        .join(' ');
-    }
-
     // Asíntotas
     const pendiente1 = puntos.eje === 'horizontal' ? b / a : a / b;
     const pendiente2 = -pendiente1;
-
-    const xRange = 100;
-    const y1Start = k + pendiente1 * (limites.xMin - h);
-    const y1End = k + pendiente1 * (limites.xMax - h);
-    const y2Start = k + pendiente2 * (limites.xMin - h);
-    const y2End = k + pendiente2 * (limites.xMax - h);
 
     return (
       <>
@@ -181,6 +168,9 @@ export function GraficaConica({ resultado }: Props) {
         {/* Ramas de la hipérbola */}
         <Plot.OfX
           y={(x) => {
+            if (puntos.eje !== 'horizontal') {
+              return Number.NaN;
+            }
             const relativo = (x - h) / a;
             const discriminante = relativo * relativo - 1;
             if (discriminante < 0) return Number.NaN;
@@ -193,11 +183,44 @@ export function GraficaConica({ resultado }: Props) {
 
         <Plot.OfX
           y={(x) => {
+            if (puntos.eje !== 'horizontal') {
+              return Number.NaN;
+            }
             const relativo = (x - h) / a;
             const discriminante = relativo * relativo - 1;
             if (discriminante < 0) return Number.NaN;
             const raiz = raizCuadrada(discriminante);
             return k - b * raiz;
+          }}
+          color="#2563eb"
+          opacity={0.8}
+        />
+
+        <Plot.OfY
+          x={(y) => {
+            if (puntos.eje !== 'vertical') {
+              return Number.NaN;
+            }
+            const relativo = (y - k) / a;
+            const discriminante = relativo * relativo - 1;
+            if (discriminante < 0) return Number.NaN;
+            const raiz = raizCuadrada(discriminante);
+            return h + b * raiz;
+          }}
+          color="#2563eb"
+          opacity={0.8}
+        />
+
+        <Plot.OfY
+          x={(y) => {
+            if (puntos.eje !== 'vertical') {
+              return Number.NaN;
+            }
+            const relativo = (y - k) / a;
+            const discriminante = relativo * relativo - 1;
+            if (discriminante < 0) return Number.NaN;
+            const raiz = raizCuadrada(discriminante);
+            return h - b * raiz;
           }}
           color="#2563eb"
           opacity={0.8}
@@ -241,7 +264,7 @@ export function GraficaConica({ resultado }: Props) {
   function renderParabola() {
     const p = formaCanonica.p ?? 1;
     const esVertical = formaCanonica.eje === 'vertical';
-    const puntos = puntosParabola(h, k, p, esVertical, 40, 0.1);
+    puntosParabola(h, k, p, esVertical, 40, 0.1);
 
     // Foco
     const focoX = esVertical ? h : h + p;
@@ -257,9 +280,7 @@ export function GraficaConica({ resultado }: Props) {
         {esVertical ? (
           <Plot.OfX
             y={(x) => {
-              const val = 4 * p * (x - h) * (x - h);
-              if (val < 0) return Number.NaN;
-              return k + val / (4 * p);
+              return k + ((x - h) * (x - h)) / (4 * p);
             }}
             color="#2563eb"
             opacity={0.8}
@@ -267,9 +288,7 @@ export function GraficaConica({ resultado }: Props) {
         ) : (
           <Plot.OfY
             x={(y) => {
-              const val = 4 * p * (y - k) * (y - k);
-              if (val < 0) return Number.NaN;
-              return h + val / (4 * p);
+              return h + ((y - k) * (y - k)) / (4 * p);
             }}
             color="#2563eb"
             opacity={0.8}
@@ -325,10 +344,20 @@ export function GraficaConica({ resultado }: Props) {
   }
 
   return (
-    <div className="p-6 border rounded-lg shadow-md bg-white">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">Gráfica de la Cónica</h2>
+    <div className="academic-card space-y-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Visualización</p>
+          <h2 className="text-2xl font-bold text-foreground">Gráfica de la cónica</h2>
+        </div>
+        <div className="flex gap-2 text-xs font-semibold text-muted-foreground">
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
+        </div>
+      </div>
 
-      <div className="w-full h-96 border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+      <div className="relative h-96 w-full overflow-hidden rounded-xl border border-border bg-muted/20 graph-grid">
         <Mafs
           viewBox={{
             x: [limites.xMin, limites.xMax],
@@ -342,7 +371,7 @@ export function GraficaConica({ resultado }: Props) {
       </div>
 
       {/* Leyenda de colores */}
-      <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+      <div className="grid grid-cols-2 gap-4 text-sm text-foreground">
         <div className="flex items-center gap-2">
           <span className="w-4 h-4 bg-orange-500 rounded-full"></span>
           <span>Centro/Vértice</span>

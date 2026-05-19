@@ -6,21 +6,91 @@ interface Props {
 }
 
 export function TransformacionCanonica({ resultado }: Props) {
+  const { tipo, formaCanonica } = resultado;
+  const centro = formaCanonica.centro;
+
+  const formato = (valor: number | undefined) => {
+    if (typeof valor !== 'number' || !Number.isFinite(valor)) {
+      return '—';
+    }
+
+    const redondeado = Math.round(valor * 1000) / 1000;
+    return Number.isInteger(redondeado)
+      ? String(redondeado)
+      : redondeado.toFixed(3).replace(/\.0+$/, '').replace(/0+$/, '').replace(/\.$/, '');
+  };
+
+  const renderTabla = () => {
+    if (tipo === 'circunferencia') {
+      return (
+        <tbody>
+          <tr><th className="border-b py-2 px-4">Centro</th><td className="border-b py-2 px-4">({formato(centro.h)}, {formato(centro.k)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Radio</th><td className="border-b py-2 px-4">{formato(formaCanonica.radio)}</td></tr>
+        </tbody>
+      );
+    }
+
+    if (tipo === 'elipse') {
+      return (
+        <tbody>
+          <tr><th className="border-b py-2 px-4">Centro</th><td className="border-b py-2 px-4">({formato(centro.h)}, {formato(centro.k)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Semieje mayor</th><td className="border-b py-2 px-4">{formato(formaCanonica.a)}</td></tr>
+          <tr><th className="border-b py-2 px-4">Semieje menor</th><td className="border-b py-2 px-4">{formato(formaCanonica.b)}</td></tr>
+          <tr><th className="border-b py-2 px-4">Foco 1</th><td className="border-b py-2 px-4">({formato(formaCanonica.focos?.[0]?.x)}, {formato(formaCanonica.focos?.[0]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Foco 2</th><td className="border-b py-2 px-4">({formato(formaCanonica.focos?.[1]?.x)}, {formato(formaCanonica.focos?.[1]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Vértice 1</th><td className="border-b py-2 px-4">({formato(formaCanonica.vertices?.[0]?.x)}, {formato(formaCanonica.vertices?.[0]?.y)})</td></tr>
+          <tr><th className="py-2 px-4">Vértice 2</th><td className="py-2 px-4">({formato(formaCanonica.vertices?.[1]?.x)}, {formato(formaCanonica.vertices?.[1]?.y)})</td></tr>
+        </tbody>
+      );
+    }
+
+    if (tipo === 'hiperbola') {
+      return (
+        <tbody>
+          <tr><th className="border-b py-2 px-4">Centro</th><td className="border-b py-2 px-4">({formato(centro.h)}, {formato(centro.k)})</td></tr>
+          <tr><th className="border-b py-2 px-4">a</th><td className="border-b py-2 px-4">{formato(formaCanonica.a)}</td></tr>
+          <tr><th className="border-b py-2 px-4">b</th><td className="border-b py-2 px-4">{formato(formaCanonica.b)}</td></tr>
+          <tr><th className="border-b py-2 px-4">Foco 1</th><td className="border-b py-2 px-4">({formato(formaCanonica.focos?.[0]?.x)}, {formato(formaCanonica.focos?.[0]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Foco 2</th><td className="border-b py-2 px-4">({formato(formaCanonica.focos?.[1]?.x)}, {formato(formaCanonica.focos?.[1]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Vértice 1</th><td className="border-b py-2 px-4">({formato(formaCanonica.vertices?.[0]?.x)}, {formato(formaCanonica.vertices?.[0]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Vértice 2</th><td className="border-b py-2 px-4">({formato(formaCanonica.vertices?.[1]?.x)}, {formato(formaCanonica.vertices?.[1]?.y)})</td></tr>
+          <tr><th className="py-2 px-4">Directrices</th><td className="py-2 px-4">{formaCanonica.directrices?.join(' y ') ?? '—'}</td></tr>
+        </tbody>
+      );
+    }
+
+    if (tipo === 'parabola') {
+      return (
+        <tbody>
+          <tr><th className="border-b py-2 px-4">Vértice</th><td className="border-b py-2 px-4">({formato(centro.h)}, {formato(centro.k)})</td></tr>
+          <tr><th className="border-b py-2 px-4">Foco</th><td className="border-b py-2 px-4">({formato(formaCanonica.focos?.[0]?.x)}, {formato(formaCanonica.focos?.[0]?.y)})</td></tr>
+          <tr><th className="border-b py-2 px-4">p</th><td className="border-b py-2 px-4">{formato(formaCanonica.p)}</td></tr>
+          <tr><th className="py-2 px-4">Directriz</th><td className="py-2 px-4">{formaCanonica.directriz ?? '—'}</td></tr>
+        </tbody>
+      );
+    }
+
+    return (
+      <tbody>
+        <tr><td className="py-4 px-4">Sin datos geométricos disponibles.</td></tr>
+      </tbody>
+    );
+  };
+
   return (
-    <div className="p-4 border rounded shadow mt-6">
-      <h2 className="text-xl font-bold mb-4">Transformación Canónica y Elementos Geométricos</h2>
+    <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 className="mb-4 text-xl font-bold text-slate-900">Transformación Canónica y Elementos Geométricos</h2>
       
       <div className="mb-4">
-        <h3 className="font-semibold text-lg">Forma Canónica:</h3>
-        {/* Renderizado de la forma canónica dependiente del tipo */}
-        <p className="font-mono bg-gray-100 p-2 rounded inline-block mt-2">
-          {JSON.stringify(resultado.formaCanonica)}
+        <h3 className="text-lg font-semibold text-slate-800">Forma Canónica</h3>
+        <p className="mt-2 inline-block rounded-xl bg-slate-100 px-3 py-2 font-mono text-sm text-slate-800">
+          {formaCanonica.ecuacion ?? JSON.stringify(formaCanonica)}
         </p>
       </div>
 
       <details className="mb-4">
-        <summary className="cursor-pointer font-semibold text-blue-600">General → Canónica</summary>
-        <ol className="p-4 list-decimal list-inside bg-gray-50 rounded mt-2">
+        <summary className="cursor-pointer font-semibold text-slate-700">General → Canónica</summary>
+        <ol className="mt-2 list-inside list-decimal rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
           {resultado.pasosGeneralACanonica.map((paso, idx) => (
             <li key={idx} className="mb-1">{paso}</li>
           ))}
@@ -28,8 +98,8 @@ export function TransformacionCanonica({ resultado }: Props) {
       </details>
 
       <details className="mb-4">
-        <summary className="cursor-pointer font-semibold text-purple-600">Canónica → General</summary>
-        <ol className="p-4 list-decimal list-inside bg-gray-50 rounded mt-2">
+        <summary className="cursor-pointer font-semibold text-slate-700">Canónica → General</summary>
+        <ol className="mt-2 list-inside list-decimal rounded-xl bg-slate-50 p-4 text-sm text-slate-700">
           {resultado.pasosCanonicaAGeneral.map((paso, idx) => (
             <li key={idx} className="mb-1">{paso}</li>
           ))}
@@ -37,15 +107,9 @@ export function TransformacionCanonica({ resultado }: Props) {
       </details>
 
       <div className="mt-4">
-        <h3 className="font-semibold text-lg mb-2">Elementos Geométricos:</h3>
-        <table className="min-w-full text-left bg-white border">
-          <tbody>
-            <tr>
-              <th className="py-2 px-4 border-b">Centro / Vértice</th>
-              <td className="py-2 px-4 border-b">...</td>
-            </tr>
-            {/* Otros elementos dependiendo de la cónica */}
-          </tbody>
+        <h3 className="mb-2 text-lg font-semibold text-slate-800">Elementos Geométricos</h3>
+        <table className="min-w-full overflow-hidden rounded-xl border border-slate-200 bg-white text-left text-sm">
+          {renderTabla()}
         </table>
       </div>
     </div>
