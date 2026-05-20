@@ -36,7 +36,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
       {/* TAREA 2.2: Card Entrada de RUT */}
       <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-slate-900">RUT Input</h2>
+          <h2 className="text-xl font-bold text-slate-900">Ingreso de RUT</h2>
           <p className="mt-1 text-sm text-slate-600">Ingresa un número de RUT chileno para generar una sección cónica</p>
         </div>
         
@@ -52,7 +52,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
             onClick={handleAnalyze}
             className="rounded-xl bg-slate-900 px-6 py-2 font-medium text-white hover:bg-slate-800 transition-colors"
           >
-            Analyze
+            Analizar
           </button>
         </div>
       </section>
@@ -60,7 +60,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
       {/* TAREA 2.3: Card Dígitos Extraídos */}
       {digitos && digitos.length > 0 && (
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Extracted Digits</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Dígitos extraídos</h2>
           <div className="flex flex-wrap gap-2 text-center">
             {digitos.slice(0, 8).map((d, i) => (
               <div key={i} className="flex-1 min-w-[3rem] px-3 py-2 rounded-xl bg-slate-50 border border-slate-200">
@@ -80,7 +80,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
       {coeficientes && (
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-slate-900">Equation Coefficients</h2>
+            <h2 className="text-xl font-bold text-slate-900">Coeficientes de la ecuación</h2>
             <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600">
               A𝑥² + Bxy + C𝑦² + D𝑥 + E𝑦 + F = 0
             </div>
@@ -108,7 +108,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
       {/* TAREA 2.5: Card Clasificación Cónica */}
       {resultado && (
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Conic Classification</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">Clasificación de la cónica</h2>
           
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {['circunferencia', 'elipse', 'hipérbola', 'parábola'].map((type) => {

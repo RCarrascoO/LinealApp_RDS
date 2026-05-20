@@ -3,6 +3,7 @@
 import { CamposDefensa } from '@/components/CamposDefensa';
 import { EcuacionPanel } from '@/components/EcuacionPanel';
 import { TransformacionCanonica } from '@/components/TransformacionCanonica';
+import { EquationForms } from './equation-forms';
 import { ConicaResult, CoeficientesConica } from '@/lib/clasificarConica';
 
 interface Props {
@@ -25,11 +26,16 @@ export function PanelResultadosConicas({ resultado, coeficientes, pasosCoeficien
           </span>
         </div>
 
-        <EcuacionPanel
-          coeficientes={coeficientes}
-          pasosConstruccion={pasosCoeficientes}
-          tipoConica={resultado.tipo}
-        />
+        <div className="grid gap-4 md:grid-cols-2">
+          <EquationForms resultado={resultado} coeficientes={coeficientes} />
+          <div>
+            <EcuacionPanel
+              coeficientes={coeficientes}
+              pasosConstruccion={pasosCoeficientes}
+              tipoConica={resultado.tipo}
+            />
+          </div>
+        </div>
 
         <div className="mt-5">
           <TransformacionCanonica resultado={resultado} />

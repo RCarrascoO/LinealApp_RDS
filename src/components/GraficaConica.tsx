@@ -12,12 +12,13 @@ import {
 
 interface Props {
   resultado: ConicaResult;
+  toggles?: Record<string, boolean>;
 }
 
 /**
  * Componente que renderiza la gráfica de una cónica usando Mafs
  */
-export function GraficaConica({ resultado }: Props) {
+export function GraficaConica({ resultado, toggles }: Props) {
   const { tipo, formaCanonica } = resultado;
 
   // Extraer parámetros de la forma canónica
@@ -76,10 +77,14 @@ export function GraficaConica({ resultado }: Props) {
       <>
         <Circle center={[h, k]} radius={radio} color="#2563eb" strokeOpacity={0.8} />
         {/* Centro */}
-        <Point x={h} y={k} color="#f97316" />
-        <Text x={h} y={k + 0.8} size={14} color="#f97316">
-          C({h.toFixed(1)}, {k.toFixed(1)})
-        </Text>
+        {toggles?.points ?? true ? (
+          <>
+            <Point x={h} y={k} color="#f97316" />
+            <Text x={h} y={k + 0.8} size={14} color="#f97316">
+              C({h.toFixed(1)}, {k.toFixed(1)})
+            </Text>
+          </>
+        ) : null}
       </>
     );
   }
@@ -98,42 +103,50 @@ export function GraficaConica({ resultado }: Props) {
         <Ellipse center={[h, k]} radius={[a, b]} color="#2563eb" strokeOpacity={0.8} />
 
         {/* Centro */}
-        <Point x={h} y={k} color="#f97316" />
-        <Text x={h - 1.5} y={k - 1} size={12} color="#f97316">
-          C({h.toFixed(1)}, {k.toFixed(1)})
-        </Text>
+        {toggles?.points ?? true ? (
+          <>
+            <Point x={h} y={k} color="#f97316" />
+            <Text x={h - 1.5} y={k - 1} size={12} color="#f97316">
+              C({h.toFixed(1)}, {k.toFixed(1)})
+            </Text>
+          </>
+        ) : null}
 
         {/* Focos */}
-        {puntos.eje === 'horizontal' ? (
-          <>
-            <Point x={h + c} y={k} color="#dc2626" />
-            <Point x={h - c} y={k} color="#dc2626" />
-            <Text x={h + c} y={k - 0.8} size={11} color="#dc2626">
-              F({(h + c).toFixed(1)}, {k.toFixed(1)})
-            </Text>
-          </>
-        ) : (
-          <>
-            <Point x={h} y={k + c} color="#dc2626" />
-            <Point x={h} y={k - c} color="#dc2626" />
-            <Text x={h + 0.8} y={k + c} size={11} color="#dc2626">
-              F({h.toFixed(1)}, {(k + c).toFixed(1)})
-            </Text>
-          </>
-        )}
+        {toggles?.foci ?? true ? (
+          puntos.eje === 'horizontal' ? (
+            <>
+              <Point x={h + c} y={k} color="#dc2626" />
+              <Point x={h - c} y={k} color="#dc2626" />
+              <Text x={h + c} y={k - 0.8} size={11} color="#dc2626">
+                F({(h + c).toFixed(1)}, {k.toFixed(1)})
+              </Text>
+            </>
+          ) : (
+            <>
+              <Point x={h} y={k + c} color="#dc2626" />
+              <Point x={h} y={k - c} color="#dc2626" />
+              <Text x={h + 0.8} y={k + c} size={11} color="#dc2626">
+                F({h.toFixed(1)}, {(k + c).toFixed(1)})
+              </Text>
+            </>
+          )
+        ) : null}
 
         {/* Vértices */}
-        {puntos.eje === 'horizontal' ? (
-          <>
-            <Point x={h + a} y={k} color="#0ea5e9" />
-            <Point x={h - a} y={k} color="#0ea5e9" />
-          </>
-        ) : (
-          <>
-            <Point x={h} y={k + a} color="#0ea5e9" />
-            <Point x={h} y={k - a} color="#0ea5e9" />
-          </>
-        )}
+        {toggles?.vertices ?? true ? (
+          puntos.eje === 'horizontal' ? (
+            <>
+              <Point x={h + a} y={k} color="#0ea5e9" />
+              <Point x={h - a} y={k} color="#0ea5e9" />
+            </>
+          ) : (
+            <>
+              <Point x={h} y={k + a} color="#0ea5e9" />
+              <Point x={h} y={k - a} color="#0ea5e9" />
+            </>
+          )
+        ) : null}
       </>
     );
   }
@@ -154,16 +167,20 @@ export function GraficaConica({ resultado }: Props) {
     return (
       <>
         {/* Asíntotas punteadas */}
-        <Plot.OfX
-          y={(x) => k + pendiente1 * (x - h)}
-          color="#9ca3af"
-          opacity={0.5}
-        />
-        <Plot.OfX
-          y={(x) => k + pendiente2 * (x - h)}
-          color="#9ca3af"
-          opacity={0.5}
-        />
+        {toggles?.asymptotes ?? false ? (
+          <>
+            <Plot.OfX
+              y={(x) => k + pendiente1 * (x - h)}
+              color="#9ca3af"
+              opacity={0.5}
+            />
+            <Plot.OfX
+              y={(x) => k + pendiente2 * (x - h)}
+              color="#9ca3af"
+              opacity={0.5}
+            />
+          </>
+        ) : null}
 
         {/* Ramas de la hipérbola */}
         <Plot.OfX
@@ -227,33 +244,37 @@ export function GraficaConica({ resultado }: Props) {
         />
 
         {/* Centro */}
-        <Point x={h} y={k} color="#f97316" />
+        {toggles?.points ?? true ? <Point x={h} y={k} color="#f97316" /> : null}
 
         {/* Focos */}
-        {puntos.eje === 'horizontal' ? (
-          <>
-            <Point x={h + c} y={k} color="#dc2626" />
-            <Point x={h - c} y={k} color="#dc2626" />
-          </>
-        ) : (
-          <>
-            <Point x={h} y={k + c} color="#dc2626" />
-            <Point x={h} y={k - c} color="#dc2626" />
-          </>
-        )}
+        {toggles?.foci ?? true ? (
+          puntos.eje === 'horizontal' ? (
+            <>
+              <Point x={h + c} y={k} color="#dc2626" />
+              <Point x={h - c} y={k} color="#dc2626" />
+            </>
+          ) : (
+            <>
+              <Point x={h} y={k + c} color="#dc2626" />
+              <Point x={h} y={k - c} color="#dc2626" />
+            </>
+          )
+        ) : null}
 
         {/* Vértices */}
-        {puntos.eje === 'horizontal' ? (
-          <>
-            <Point x={h + a} y={k} color="#0ea5e9" />
-            <Point x={h - a} y={k} color="#0ea5e9" />
-          </>
-        ) : (
-          <>
-            <Point x={h} y={k + a} color="#0ea5e9" />
-            <Point x={h} y={k - a} color="#0ea5e9" />
-          </>
-        )}
+        {toggles?.vertices ?? true ? (
+          puntos.eje === 'horizontal' ? (
+            <>
+              <Point x={h + a} y={k} color="#0ea5e9" />
+              <Point x={h - a} y={k} color="#0ea5e9" />
+            </>
+          ) : (
+            <>
+              <Point x={h} y={k + a} color="#0ea5e9" />
+              <Point x={h} y={k - a} color="#0ea5e9" />
+            </>
+          )
+        ) : null}
       </>
     );
   }
@@ -296,31 +317,41 @@ export function GraficaConica({ resultado }: Props) {
         )}
 
         {/* Directriz punteada */}
-        {esVertical ? (
-          <Plot.OfX
-            y={() => directrizY}
-            color="#9ca3af"
-            opacity={0.5}
-          />
-        ) : (
-          <Plot.OfY
-            x={() => directrizX}
-            color="#9ca3af"
-            opacity={0.5}
-          />
-        )}
+        {toggles?.directrix ?? false ? (
+          esVertical ? (
+            <Plot.OfX
+              y={() => directrizY}
+              color="#9ca3af"
+              opacity={0.5}
+            />
+          ) : (
+            <Plot.OfY
+              x={() => directrizX}
+              color="#9ca3af"
+              opacity={0.5}
+            />
+          )
+        ) : null}
 
         {/* Vértice */}
-        <Point x={h} y={k} color="#f97316" />
-        <Text x={h} y={k + 0.8} size={12} color="#f97316">
-          V({h.toFixed(1)}, {k.toFixed(1)})
-        </Text>
+        {toggles?.points ?? true ? (
+          <>
+            <Point x={h} y={k} color="#f97316" />
+            <Text x={h} y={k + 0.8} size={12} color="#f97316">
+              V({h.toFixed(1)}, {k.toFixed(1)})
+            </Text>
+          </>
+        ) : null}
 
         {/* Foco */}
-        <Point x={focoX} y={focoY} color="#dc2626" />
-        <Text x={focoX + 0.5} y={focoY + 0.8} size={11} color="#dc2626">
-          F({focoX.toFixed(1)}, {focoY.toFixed(1)})
-        </Text>
+        {toggles?.foci ?? true ? (
+          <>
+            <Point x={focoX} y={focoY} color="#dc2626" />
+            <Text x={focoX + 0.5} y={focoY + 0.8} size={11} color="#dc2626">
+              F({focoX.toFixed(1)}, {focoY.toFixed(1)})
+            </Text>
+          </>
+        ) : null}
       </>
     );
   }
