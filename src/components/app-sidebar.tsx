@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const items = [
-  { label: 'Validación RUT', href: '/', mark: 'R' },
-  { label: 'Sección Cónicas', href: '/conicas', mark: 'C' },
+  { label: 'Validación de Rut', href: '/rut', mark: 'R' },
+  { label: 'Secciones Cónicas', href: '/conicas', mark: 'C' },
   { label: 'Límites', href: '/limites', mark: 'L' }
 ];
 
@@ -37,16 +37,23 @@ export function AppSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-[10px] px-3 py-3 text-sm font-medium transition-colors ${
+              className={`relative flex items-center justify-between overflow-hidden rounded-[10px] px-3 py-3 text-sm font-medium transition-all ${
                 activo
                   ? 'bg-primary text-primary-foreground shadow-[0_8px_24px_rgba(37,99,235,0.18)]'
                   : 'text-foreground hover:bg-muted'
               }`}
             >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[11px] font-bold text-primary shadow-sm">
-                {item.mark}
-              </span>
-              <span>{item.label}</span>
+              <div className="flex items-center gap-3">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[11px] font-bold text-primary shadow-sm">
+                  {item.mark}
+                </span>
+                <span>{item.label}</span>
+              </div>
+              
+              {/* Indicador visual a la derecha (solo visible si está activo) */}
+              {activo && (
+                <span className="absolute right-3 h-2 w-2 rounded-full bg-white shadow-sm" />
+              )}
             </Link>
           );
         })}
