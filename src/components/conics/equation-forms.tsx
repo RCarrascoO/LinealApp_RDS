@@ -26,14 +26,14 @@ export function EquationForms({ resultado, coeficientes }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-slate-200 bg-gray-50 p-4">
-        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500">
+      <div className="rounded-lg border border-border bg-gray-50 p-4">
+        <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Forma General
         </p>
-        <p className="font-mono text-lg text-slate-900">{general}</p>
+        <p className="font-mono text-lg text-foreground">{general}</p>
       </div>
 
-      <div className="rounded-lg border-2 border-indigo-300 bg-indigo-50 p-4">
+      <div className="rounded-lg border-2 border-indigo-300 bg-primary/10 p-4">
         <p className="mb-2 text-xs font-medium uppercase tracking-wider text-indigo-600">
           Forma Canónica
         </p>

@@ -48,15 +48,15 @@ export function PaginaConicas() {
   };
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(15,23,42,0.08),_transparent_35%),linear-gradient(180deg,_#f8fafc_0%,_#e2e8f0_100%)] px-4 py-8 text-slate-900">
+    <main className="min-h-screen bg-background px-4 py-8 text-foreground">
       <div className="mx-auto max-w-7xl space-y-6">
-        <header className="rounded-3xl border border-white/60 bg-white/80 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.10)] backdrop-blur">
+        <header className="rounded-3xl border border-border/60 bg-card/80 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.10)] backdrop-blur">
           <div className="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-950 md:text-5xl">
+              <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">
                 Análisis de Cónicas
               </h1>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground md:text-base">
                 Genera y analiza secciones cónicas a partir de la extracción de coeficientes del RUT
               </p>
             </div>

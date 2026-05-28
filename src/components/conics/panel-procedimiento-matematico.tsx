@@ -18,29 +18,29 @@ export function PanelProcedimientoMatematico({ pasosCoeficientes = [] }: Props) 
   ];
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+    <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">PROCEDIMIENTO MATEMÁTICO</p>
-        <h2 className="text-xl font-bold text-slate-900">Derivación paso a paso</h2>
-        <p className="mt-1 text-sm text-slate-600">Pasos matemáticos detallados para transformar y verificar la cónica.</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">PROCEDIMIENTO MATEMÁTICO</p>
+        <h2 className="text-xl font-bold text-foreground">Derivación paso a paso</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Pasos matemáticos detallados para transformar y verificar la cónica.</p>
       </div>
 
       <div className="space-y-3">
         {pasos.map((paso, idx) => (
-          <details key={idx} className="group rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <details key={idx} className="group rounded-xl border border-border bg-muted p-4">
             <summary className="cursor-pointer list-none flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">{idx + 1}</span>
-                <span className="text-sm font-semibold text-slate-800">{paso.title}</span>
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{idx + 1}</span>
+                <span className="text-sm font-semibold text-foreground">{paso.title}</span>
               </div>
-              <span className="text-xs text-slate-500">Paso {idx + 1}</span>
+              <span className="text-xs text-muted-foreground">Paso {idx + 1}</span>
             </summary>
 
             <div className="mt-3 space-y-3">
-              <p className="text-sm leading-6 text-slate-600">{paso.content}</p>
+              <p className="text-sm leading-6 text-muted-foreground">{paso.content}</p>
               {paso.finalFormula && (
-                <div className="rounded-md border border-slate-200 bg-white p-3">
-                  <pre className="m-0 font-mono text-sm text-slate-900">{paso.finalFormula}</pre>
+                <div className="rounded-md border border-border bg-card p-3">
+                  <pre className="m-0 font-mono text-sm text-foreground">{paso.finalFormula}</pre>
                 </div>
               )}
             </div>

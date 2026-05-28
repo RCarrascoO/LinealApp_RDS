@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopNavbar } from "@/components/top-navbar";
 import { SidebarProvider } from "@/components/SidebarContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -24,17 +25,25 @@ export default function RootLayout({
     <html
       lang="es"
       className={`${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
-        <SidebarProvider>
-          <div className="flex min-h-screen">
-            <AppSidebar />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <TopNavbar />
-              <main className="min-w-0 flex-1">{children}</main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider>
+            <div className="flex min-h-screen">
+              <AppSidebar />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <TopNavbar />
+                <main className="min-w-0 flex-1">{children}</main>
+              </div>
             </div>
-          </div>
-        </SidebarProvider>
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

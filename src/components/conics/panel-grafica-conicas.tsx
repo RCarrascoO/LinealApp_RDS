@@ -20,16 +20,16 @@ export function PanelGraficaConicas({ resultado }: Props) {
   const [toggleStates, setToggleStates] = useState<Record<string, boolean>>(Object.fromEntries(graphToggles.map(t => [t.id, t.defaultChecked])));
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6">
+    <section className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:sticky lg:top-6">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Visualización</p>
-          <h2 className="text-xl font-bold text-slate-900">Gráfica de la cónica</h2>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Visualización</p>
+          <h2 className="text-xl font-bold text-foreground">Gráfica de la cónica</h2>
         </div>
-        <div className="flex gap-2 text-xs font-semibold text-slate-500">
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">+</span>
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">−</span>
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">↺</span>
+        <div className="flex gap-2 text-xs font-semibold text-muted-foreground">
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
+          <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
         </div>
       </div>
 
@@ -45,13 +45,13 @@ export function PanelGraficaConicas({ resultado }: Props) {
                   checked={!!toggleStates[toggle.id]}
                   onChange={(e) => setToggleStates(prev => ({ ...prev, [toggle.id]: e.target.checked }))}
                 />
-                <span className="text-slate-600">{toggle.label}</span>
+                <span className="text-muted-foreground">{toggle.label}</span>
               </label>
             ))}
           </div>
         </>
       ) : (
-        <div className="flex aspect-square items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-center text-sm text-slate-500">
+        <div className="flex aspect-square items-center justify-center rounded-2xl border border-dashed border-border bg-muted text-center text-sm text-muted-foreground">
           Espera a validar un RUT para renderizar la gráfica.
         </div>
       )}

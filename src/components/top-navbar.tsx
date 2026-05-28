@@ -1,12 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { PanelLeft, Users, ChevronDown, Sun } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { PanelLeft, Users, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useSidebar } from './SidebarContext';
+import { useTheme } from 'next-themes';
 
 export function TopNavbar() {
   const [teamOpen, setTeamOpen] = useState(false);
   const { toggleSidebar, isSidebarCollapsed } = useSidebar();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 flex h-14 w-full items-center justify-between border-b border-border bg-card px-4 lg:px-6">
@@ -83,13 +90,16 @@ export function TopNavbar() {
         </a>
 
         {/* Theme Toggle */}
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-          aria-label="Toggle theme"
-        >
-          <Sun className="h-5 w-5" />
-        </button>
+        {mounted && (
+          <button
+            type="button"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+        )}
       </div>
     </header>
   );
