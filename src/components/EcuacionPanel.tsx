@@ -20,7 +20,7 @@ export function EcuacionPanel({ coeficientes, pasosConstruccion, tipoConica }: P
   const { A, B, C, D, E } = coeficientes;
 
   return (
-    <div className="p-4 border rounded shadow">
+    <div className="p-4 border border-border rounded shadow bg-card text-card-foreground">
       <h2 className="text-xl font-bold mb-4">Ecuación General</h2>
       <div className="text-2xl mb-4 font-mono">
         <span style={{ color: A === 0 ? 'red' : 'inherit' }}>{A}x²</span> +{' '}
@@ -29,15 +29,15 @@ export function EcuacionPanel({ coeficientes, pasosConstruccion, tipoConica }: P
       
       {tipoConica && (
         <div className="mb-4">
-          <span className="inline-block px-3 py-1 rounded bg-gray-200 text-gray-800 font-semibold uppercase text-sm">
+          <span className="inline-block px-3 py-1 rounded bg-muted text-muted-foreground font-semibold uppercase text-sm border border-border">
             {tipoConica}
           </span>
         </div>
       )}
 
       <details className="mt-4">
-        <summary className="cursor-pointer font-semibold text-blue-600">Ver construcción paso a paso</summary>
-        <ol className="p-4 list-decimal list-inside bg-gray-50 rounded mt-2">
+        <summary className="cursor-pointer font-semibold text-blue-600 dark:text-blue-400">Ver construcción paso a paso</summary>
+        <ol className="p-4 list-decimal list-inside bg-muted rounded mt-2 text-muted-foreground">
           {pasosConstruccion.map((paso, idx) => (
             <li key={idx} className="mb-1">{paso}</li>
           ))}

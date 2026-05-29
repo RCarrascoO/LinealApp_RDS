@@ -55,23 +55,23 @@ function Campo({
 }) {
   const borde = status
     ? status.correcto
-      ? 'border-green-500 bg-green-50 text-green-900'
-      : 'border-red-500 bg-red-50 text-red-900'
-    : 'border-slate-300 bg-white text-slate-900';
+      ? 'border-green-500 bg-green-50 dark:bg-green-950/30 text-green-900 dark:text-green-300'
+      : 'border-red-500 bg-red-50 dark:bg-red-950/30 text-red-900 dark:text-red-300'
+    : 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100';
 
   return (
     <label className="block">
-      <span className="mb-1 block text-sm font-medium text-slate-700">{label}</span>
+      <span className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
       <input
         type="text"
         inputMode="decimal"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder ?? '___'}
-        className={`w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors focus:ring-2 focus:ring-slate-400 ${borde}`}
+        className={`w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-600 ${borde}`}
       />
       {status && (
-        <p className={`mt-1 text-xs font-medium ${status.correcto ? 'text-green-700' : 'text-red-700'}`}>
+        <p className={`mt-1 text-xs font-medium ${status.correcto ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
           {status.correcto ? 'Correcto' : `Esperado: ${status.esperado}`}
         </p>
       )}
@@ -183,18 +183,18 @@ export function CamposDefensa({ resultado }: Props) {
     );
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-card p-6 shadow-sm">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-900">{tituloSeccion}</h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-50">{tituloSeccion}</h2>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
             Completa los campos vacíos como si estuvieras explicando el desarrollo en una defensa oral.
           </p>
         </div>
         <button
           type="button"
           onClick={verificar}
-          className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-700"
+          className="rounded-full bg-slate-900 dark:bg-slate-100 px-4 py-2 text-sm font-semibold text-white dark:text-slate-900 transition-colors hover:bg-slate-700 dark:hover:bg-slate-300"
         >
           Verificar respuestas
         </button>
@@ -250,7 +250,7 @@ export function CamposDefensa({ resultado }: Props) {
       </div>
 
       {verificado && (
-        <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+        <div className="mt-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-4 text-sm text-slate-700 dark:text-slate-300">
           Revisa los campos coloreados. En rojo aparece la respuesta esperada para corregir rápidamente.
         </div>
       )}
