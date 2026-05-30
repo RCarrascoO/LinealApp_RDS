@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Guía de Instalación y Uso - Aplicación de Cónicas (MathRUT)
 
-## Getting Started
+Bienvenida a la aplicación interactiva para el análisis de Cónicas a partir del RUT. Esta guía está diseñada paso a paso para que cualquier persona pueda ejecutar el programa en su computadora sin necesidad de conocimientos previos en programación.
 
-First, run the development server:
+---
+
+## 🛠️ Requisitos Previos
+
+Para hacer esto lo más sencillo posible, solo necesitas instalar un programa llamado **Node.js**. Esto provee el "motor" necesario para que la aplicación corra en tu equipo.
+
+1. Ingresa a la página oficial: [https://nodejs.org/es](https://nodejs.org/es)
+2. Descarga el botón verde que dice **"LTS"** (Recomendado para la mayoría de los usuarios).
+3. Abre el archivo descargado e instálalo como cualquier otro programa (solo presiona *Siguiente > Siguiente > Finalizar*).
+
+---
+
+## 🚀 Paso a Paso: Cómo encender la aplicación
+
+### Paso 1: Abrir la consola en la carpeta del proyecto
+1. Descarga o descomprime la carpeta de la aplicación en tu computadora.
+2. Abre esa carpeta.
+3. Ahora debemos abrir una pequeña consola (terminal) justo en esa ubicación:
+   - **En Windows:** Haz clic en la barra de direcciones superior de la carpeta (donde ves la ruta, por ejemplo: `C:\Users\...\LinealApp_RDS`), borra todo el texto, escribe **`cmd`** y presiona la tecla **Enter**. Se abrirá una ventana negra.
+   - **En Mac:** Abre la aplicación "Terminal". Escribe la palabra `cd ` (con espacio al final) y **arrastra la carpeta** desde el buscador hacia la ventana de la terminal, luego presiona **Enter**.
+
+### Paso 2: Instalación (Solo se hace la primera vez)
+En la ventanita que acabas de abrir, escribe el siguiente comando y presiona **Enter**. Esto descargará automáticamente los elementos necesarios para que funcione:
+
+```bash
+npm install
+```
+*(Espera un minuto; verás que se llenan barras de carga o texto en la pantalla, es completamente normal).*
+
+### Paso 3: Encender el sistema
+Una vez que termine el paso anterior (cuando vuelva a dejarte escribir), escribe el siguiente comando y vuelve a presionar **Enter**:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Paso 4: ¡Abrir la aplicación!
+¡Listo! La aplicación ya está encendida y corriendo en tu equipo. Para verla:
+1. Abre tu navegador de internet habitual (Google Chrome, Edge, Safari, etc.).
+2. En la barra de búsqueda de arriba, escribe exactamente esta dirección y dale a Enter:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   **http://localhost:3000**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 💻 Guía de Uso Rápido
+Una vez dentro de la app en la página de **Validación de RUT y Cónicas**:
+1. Escribe un RUT en la casilla (sin puntos y con guion, o solamente los números).
+2. Haz clic en **"Analizar"**.
+3. El programa extraerá los coeficientes matemáticos basados en tus números, generará la **Ecuación General**, la transformará a su **Forma Canónica**, te dirá de qué tipo de cónica se trata, y construirá la **Gráfica** automáticamente.
+4. Más abajo, encontrarás una sección llamada **Defensa Oral**. Ahí los alumnos pueden comprobar sus cálculos introduciendo los vértices, focos, radio y otros elementos geométricos; la aplicación validará si están correctos.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛑 ¿Cómo apagar la aplicación?
+Al terminar de usar la herramienta, vuelve a la ventana negra de texto (consola) que abriste en el Paso 1.
+- Presiona en tu teclado las teclas **Ctrl + C** juntas. 
+- Te preguntará si deseas terminar el proceso, escribe la letra **`S`** o **`Y`** (dependiendo del idioma) y presiona Enter. También puedes simplemente cerrar la ventana en la "X".
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> **⚙️ Opcional para usuarios avanzados (Informáticos):**  
+> Si tienes Docker instalado y prefieres no lidiar con Node.js, simplemente abre una terminal en esta carpeta y ejecuta `docker compose up -d --build`. La app estará lista en el puerto 3000 automáticamente.
