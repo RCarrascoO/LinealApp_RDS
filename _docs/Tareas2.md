@@ -1,158 +1,154 @@
-## 👤 PERSONA 1 — Sidebar + página RUT (idéntica)
+## Convención obligatoria para esta página (aplica a todos)
 
-### Tarea 1.1 — Configurar menú lateral con exactamente 3 entradas de producto
-
-**Qué hacer (exacto):**
-
-- Dejar visibles solo: `RUT Validation` (`/rut`), `Conic Sections` (`/conics`), `Limits` (`/limits` o ruta definida por ustedes).
-- Mantener ícono por ítem y estado activo con indicador visual a la derecha.
-- Quitar/ocultar del sidebar: Dashboard, Piecewise, Graphs, Procedures, Defense, Settings. **Se espera al completar:**
-- Sidebar con solo esas 3 opciones y highlight correcto de ruta activa.
-
-### Tarea 1.2 — Construir header de página RUT igual al actual
-
-**Qué hacer (exacto):**
-
-- Título: `RUT Validation`.
-- Subtítulo: `Validate Chilean RUT numbers using the modulo 11 algorithm`.
-- Separación vertical y padding equivalentes. **Se espera al completar:**
-- Encabezado idéntico en texto, jerarquía tipográfica y espaciado.
-
-### Tarea 1.3 — Construir card de input RUT con tooltip de formato
-
-**Qué hacer (exacto):**
-
-- Card “Enter RUT Number”.
-- Ícono de info con tooltip: `Format: 12.345.678-9 or 12345678-9`.
-- Input centrado, placeholder `12.345.678-9`, estilo monoespaciado grande.
-- Botones: `Validate RUT` y `Clear`. **Se espera al completar:**
-- Card visualmente igual (estructura, etiquetas, acciones y disposición).
-
-### Tarea 1.4 — Construir panel de procedimiento RUT en 4 bloques
-
-**Qué hacer (exacto):**
-
-- Mostrar condicionalmente tras validar:
-    1. `Step 1: Digits Extraction`
-    2. `Step 2: Multiplication Table`
-    3. `Step 3: Modulo 11 Calculation`
-    4. `Step 4: Validation Result`
-- Mantener tabla con columnas Position/Digit/Multiplier/Product.
-- Mantener badge final `VALID RUT` / `INVALID RUT`. **Se espera al completar:**
-- Flujo visual paso a paso idéntico al actual.
+- Ruta objetivo: `app/(dashboard)/limites/page.tsx`
+- Carpeta UI objetivo: `components/limites/`
+- Componentes/funciones en español (ejemplos base):
+    - `PaginaLimites`
+    - `EncabezadoLimites`
+    - `TarjetaFuncionPorTramos`
+    - `PanelAnalisisLimites`
+    - `PanelTipoDiscontinuidad`
+    - `TablaEvidenciaNumerica`
+    - `ModoDefensaLimites`
+- No tocar topbar (ya implementada).
+- Todo el trabajo es de **interfaz**.
 
 ---
 
-## 👤 PERSONA 2 — Página Cónicas: panel izquierdo (entrada y clasificación)
+## Persona 1 — Estructura principal y bloques superiores
 
-### Tarea 2.1 — Crear layout de página cónicas exacto
+### Tarea 1.1 — Crear la página base de Límites
 
-**Qué hacer (exacto):**
+- Crear `app/(dashboard)/limites/page.tsx`.
+- Exportar `function PaginaLimites()`.
+- Estructura vertical con `gap-6 p-6`.
+- Orden de secciones:
+    1. encabezado
+    2. función por tramos
+    3. grilla 2 columnas (discontinuidad + análisis de límites)
+    4. tabla numérica
+    5. modo defensa **Criterio:** la página renderiza el esqueleto completo en el orden exacto.
 
-- Header:
-    - Título: `Conic Sections Analysis`
-    - Subtítulo: `Generate and analyze conic sections from RUT coefficient extraction`
-- Grid principal de 2 columnas (input/results).
-- Debajo: panel matemático completo. **Se espera al completar:**
-- Distribución idéntica: cabecera + 2 paneles + procedimiento.
+### Tarea 1.2 — Implementar encabezado de la página
 
-### Tarea 2.2 — Construir card “RUT Input” del panel izquierdo
+- Crear `components/limites/encabezado-limites.tsx`.
+- Exportar `EncabezadoLimites`.
+- Título y subtítulo de límites (texto académico, una sola línea de subtítulo en desktop).
+- Jerarquía tipográfica consistente con otras páginas. **Criterio:** header visualmente consistente y reutilizable.
 
-**Qué hacer (exacto):**
+### Tarea 1.3 — Implementar tarjeta “Función por tramos”
 
-- Input placeholder `12.345.678-9` + botón `Analyze`.
-- Tipografía monoespaciada en el input. **Se espera al completar:**
-- Primer bloque del panel izquierdo igual a referencia.
+- Crear `components/limites/tarjeta-funcion-por-tramos.tsx`.
+- Exportar `TarjetaFuncionPorTramos`.
+- Incluir:
+    - título de tarjeta
+    - badge con punto crítico (ej. `x = 2`)
+    - bloque matemático central de la función por tramos con llave visual
+    - franja inferior resaltando “Punto crítico” **Criterio:** tarjeta completa con jerarquía clara y foco en el punto crítico.
 
-### Tarea 2.3 — Construir card “Extracted Digits”
+### Tarea 1.4 — Integrar componentes en `PaginaLimites`
 
-**Qué hacer (exacto):**
+- Importar y montar `EncabezadoLimites` + `TarjetaFuncionPorTramos`.
+- Dejar conectados los placeholders de los otros bloques para Persona 2 y 3. **Criterio:** layout principal funcional sin romper responsive.
 
-- Renderizar chips `d1..d8` y `DV`.
-- `DV` con estilo destacado (borde/color primario).
-- Etiqueta arriba + valor monoespaciado. **Se espera al completar:**
-- Visualización de dígitos idéntica (incluyendo el bloque especial DV).
+### Tarea 1.5 — Ajuste responsive del bloque superior
 
-### Tarea 2.4 — Construir card “Equation Coefficients”
-
-**Qué hacer (exacto):**
-
-- Tarjetas A,B,C,D,E,F con:
-    - descripción corta (x² coefficient, etc.)
-    - label coeficiente y valor destacado.
-- Grid responsive (3 columnas en móvil, 6 en sm+). **Se espera al completar:**
-- Bloque de coeficientes idéntico en estructura y densidad visual.
-
-### Tarea 2.5 — Construir card “Conic Classification”
-
-**Qué hacer (exacto):**
-
-- 4 opciones: Circle, Ellipse, Hyperbola, Parabola.
-- Una opción activa con badge `Detected`.
-- Opciones inactivas con opacidad menor. **Se espera al completar:**
-- Selector de tipo cónica visualmente idéntico.
+- En móvil: reducir espacios internos del bloque de función.
+- En desktop: mantener ancho máximo del contenido matemático centrado. **Criterio:** no hay desbordes horizontales en móvil.
 
 ---
 
-## 👤 PERSONA 3 — Página Cónicas: panel derecho + Mafs + procedimiento
+## Persona 2 — Paneles de análisis (columna media)
 
-### Tarea 3.1 — Construir card “Equation Forms”
+### Tarea 2.1 — Implementar panel de tipo de discontinuidad
 
-**Qué hacer (exacto):**
+- Crear `components/limites/panel-tipo-discontinuidad.tsx`.
+- Exportar `PanelTipoDiscontinuidad`.
+- Lista de 3 opciones: removible, salto, infinita.
+- Una opción activa con badge “Detectada”.
+- Inactivas con menor opacidad. **Criterio:** panel visual listo con estados activo/inactivo.
 
-- Bloque `General Form` con ecuación completa y coeficientes resaltados.
-- Bloque `Canonical Form` destacado con borde primario. **Se espera al completar:**
-- Doble bloque de ecuaciones igual al diseño actual.
+### Tarea 2.2 — Implementar panel de análisis de límites
 
-### Tarea 3.2 — Reemplazar placeholder SVG por Mafs en “Graph Visualization”
+- Crear `components/limites/panel-analisis-limites.tsx`.
+- Exportar `PanelAnalisisLimites`.
+- Secciones internas obligatorias:
+    1. límite por izquierda
+    2. límite por derecha
+    3. existencia del límite
+    4. conclusión de continuidad
+- Cada sección en tarjeta interna con color semántico. **Criterio:** panel completo con lectura paso a paso.
 
-**Qué hacer (exacto):**
+### Tarea 2.3 — Crear bloque de notación matemática consistente
 
-- Mantener card y toolbar visual (`ZoomIn`, `ZoomOut`, `Move`, `RotateCcw`).
-- En el área de gráfico usar Mafs con:
-    - ejes visibles,
-    - rejilla visible,
-    - curva principal de la cónica detectada. **Se espera al completar:**
-- Mismo layout del panel actual, pero render real en Mafs.
+- Dentro de `PanelAnalisisLimites`, estandarizar estilo de:
+    - `lim x→a⁻`
+    - `lim x→a⁺`
+    - `lim x→a`
+- Usar tipografía monoespaciada para expresiones. **Criterio:** notación homogénea en todo el panel.
 
-### Tarea 3.3 — Implementar toggles del gráfico conectados a capas Mafs
+### Tarea 2.4 — Integrar ambos paneles en grilla de 2 columnas
 
-**Qué hacer (exacto):**
+- En `PaginaLimites`, usar `grid gap-6 lg:grid-cols-2`.
+- Columna izquierda: `PanelTipoDiscontinuidad`.
+- Columna derecha: `PanelAnalisisLimites`. **Criterio:** en móvil apila; en desktop quedan lado a lado.
 
-- Toggles: Points, Asymptotes, Vertices, Foci, Directrix.
-- Al activar/desactivar, mostrar/ocultar cada capa en Mafs. **Se espera al completar:**
-- Controles funcionales con impacto visual inmediato.
+### Tarea 2.5 — Estados visuales de “resultado no existe”
 
-### Tarea 3.4 — Construir card “Conic Elements”
-
-**Qué hacer (exacto):**
-
-- Campos: Center, Vertices, Foci, Major Axis, Minor Axis, Directrix.
-- Placeholder de cada campo igual al actual.
-- Texto auxiliar: “Fields are empty for manual completion during defense”. **Se espera al completar:**
-- Formulario de elementos cónicos idéntico al panel de referencia.
-
-### Tarea 3.5 — Construir panel “Mathematical Procedure” con acordeón de 6 pasos
-
-**Qué hacer (exacto):**
-
-- Acordeón con títulos:
-    1. Coefficient Extraction
-    2. Conic Classification
-    3. Completing the Square (x terms)
-    4. Completing the Square (y terms)
-    5. Canonical Form Derivation
-    6. Reverse Transformation Verification
-- Cada paso con badge y bloques internos de fórmula.
-- Resaltar visualmente las fórmulas finales de resultado. **Se espera al completar:**
-- Acordeón matemático idéntico en jerarquía y comportamiento.
+- En panel de análisis, reforzar estado negativo con color destructivo.
+- Mostrar texto de justificación corto debajo. **Criterio:** el estado “no existe” se identifica sin ambigüedad.
 
 ---
 
-## Criterio de “idéntico” para todo el sprint
+## Persona 3 — Evidencia numérica, modo defensa y tema oscuro de la página
 
-- Mismos textos visibles (en inglés como en referencia actual).
-- Misma estructura de cards/orden de bloques.
-- Misma lógica de estados visibles (mostrar/ocultar paneles).
-- Misma disposición responsive (desktop/móvil).
-- En gráfico: misma zona visual, pero render real con Mafs en vez de SVG mock.
+### Tarea 3.1 — Implementar tabla de evidencia numérica
+
+- Crear `components/limites/tabla-evidencia-numerica.tsx`.
+- Exportar `TablaEvidenciaNumerica`.
+- Dos bloques:
+    - aproximación por izquierda
+    - aproximación por derecha
+- Fila final resumen con tendencia (`→`). **Criterio:** tabla clara, legible y separada por enfoque lateral.
+
+### Tarea 3.2 — Implementar bloque de conclusión bajo tabla
+
+- Dentro de `TablaEvidenciaNumerica`, agregar resumen textual final:
+    - valor que se aproxima por izquierda
+    - valor por derecha
+    - conclusión de existencia **Criterio:** conclusión conectada directamente con los datos de la tabla.
+
+### Tarea 3.3 — Implementar modo defensa de límites
+
+- Crear `components/limites/modo-defensa-limites.tsx`.
+- Exportar `ModoDefensaLimites`.
+- Campos de interfaz:
+    - límite izquierdo
+    - límite derecho
+    - ¿existe el límite?
+    - tipo de discontinuidad
+    - justificación escrita
+- Botón de acción visual (sin lógica compleja). **Criterio:** formulario completo listo para uso en defensa oral.
+
+### Tarea 3.4 — Integrar tabla + modo defensa en la página
+
+- En `PaginaLimites`, montar:
+    - `TablaEvidenciaNumerica`
+    - `ModoDefensaLimites`
+- Mantener separación vertical consistente con el resto. **Criterio:** flujo visual completo de arriba hacia abajo.
+
+### Tarea 3.5 — Implementar tema oscuro específico para página de límites
+
+- Revisar todos los componentes de `components/limites/` y reemplazar colores fijos por tokens (`bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, etc.).
+- Ajustar badges/estados semánticos para contraste en oscuro.
+- Verificar que bloques con color (izq/der/destructivo/advertencia) sigan legibles en dark. **Criterio:** página de límites usable en dark mode sin zonas lavadas ni texto de bajo contraste.
+
+---
+
+## Checklist final de validación (los 3)
+
+- Solo se trabajó interfaz de la página de límites.
+- Nombres de archivos y funciones en español.
+- Responsive correcto (móvil y desktop).
+- Topbar intacta.
+- Tema oscuro validado específicamente en `/limites`.
