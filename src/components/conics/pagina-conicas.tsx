@@ -91,7 +91,11 @@ export function PaginaConicas() {
         
         {/* Debajo: panel matemático completo - Tarea 2.1 (Hecho por persona 3) */}
         <div className="space-y-6">
-            <PanelProcedimientoMatematico pasosCoeficientes={pasosCoeficientes} />
+            <PanelProcedimientoMatematico
+              pasosCoeficientes={pasosCoeficientes}
+              coeficientes={coeficientes}
+              resultado={resultado}
+            />
         </div>
 
       </div>
