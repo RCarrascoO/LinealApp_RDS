@@ -68,6 +68,10 @@ export function TablaEvidenciaNumerica() {
     { x: 'a + 0.01', fx: '6.98', observacion: 'La evidencia numérica converge a 7.' },
   ];
 
+  const limiteIzquierda = '4';
+  const limiteDerecha = '7';
+  const existeLimite = limiteIzquierda === limiteDerecha;
+
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
       <div className="flex flex-col gap-2">
@@ -98,17 +102,28 @@ export function TablaEvidenciaNumerica() {
       <div className="overflow-hidden rounded-xl border border-border bg-muted/30">
         <div className="flex items-center gap-2 border-b border-border bg-card px-4 py-3">
           <ArrowRight className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold text-foreground">Fila final de resumen</span>
+          <span className="text-sm font-semibold text-foreground">Conclusión textual</span>
         </div>
-        <div className="grid gap-3 px-4 py-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
+        <div className="grid gap-3 px-4 py-4 lg:grid-cols-3">
           <div className="rounded-lg border border-border bg-card px-4 py-3">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Izquierda</p>
-            <p className="mt-1 font-mono text-sm font-semibold text-primary">4.02 → 4</p>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Valor por izquierda</p>
+            <p className="mt-1 text-sm text-foreground">
+              La función se aproxima a <span className="font-mono font-semibold text-primary">{limiteIzquierda}</span> cuando x se acerca a a por la izquierda.
+            </p>
           </div>
-          <div className="flex justify-center text-2xl font-semibold text-primary">→</div>
-          <div className="rounded-lg border border-border bg-card px-4 py-3 text-right md:text-left">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">Derecha</p>
-            <p className="mt-1 font-mono text-sm font-semibold text-primary">6.98 → 7</p>
+          <div className="rounded-lg border border-border bg-card px-4 py-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Valor por derecha</p>
+            <p className="mt-1 text-sm text-foreground">
+              La función se aproxima a <span className="font-mono font-semibold text-primary">{limiteDerecha}</span> cuando x se acerca a a por la derecha.
+            </p>
+          </div>
+          <div className="rounded-lg border border-border bg-card px-4 py-3">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">Conclusión de existencia</p>
+            <p className={`mt-1 text-sm ${existeLimite ? 'text-emerald-600' : 'text-destructive'}`}>
+              {existeLimite
+                ? `El límite general existe porque ambos límites laterales coinciden en ${limiteIzquierda}.`
+                : `El límite general no existe porque los límites laterales son diferentes (${limiteIzquierda} ≠ ${limiteDerecha}).`}
+            </p>
           </div>
         </div>
       </div>
