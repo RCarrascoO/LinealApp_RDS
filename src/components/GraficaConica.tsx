@@ -376,19 +376,13 @@ export function GraficaConica({ resultado, toggles }: Props) {
 
   return (
     <div className="academic-card space-y-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Visualización</p>
-          <h2 className="text-2xl font-bold text-foreground">Gráfica de la cónica</h2>
-        </div>
-        <div className="flex gap-2 text-xs font-semibold text-muted-foreground">
-          <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
-          <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
-          <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
-        </div>
+      <div className="flex justify-end gap-2 text-xs font-semibold text-muted-foreground">
+        <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
+        <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
+        <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
       </div>
 
-      <div className="relative h-96 w-full overflow-hidden rounded-xl border border-border bg-muted/20 graph-grid">
+      <div className="relative h-96 w-full overflow-hidden rounded-xl border border-border bg-muted graph-grid">
         <Mafs
           viewBox={{
             x: [limites.xMin, limites.xMax],
@@ -404,19 +398,19 @@ export function GraficaConica({ resultado, toggles }: Props) {
       {/* Leyenda de colores */}
       <div className="grid grid-cols-2 gap-4 text-sm text-foreground">
         <div className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-orange-500 rounded-full"></span>
+          <span className="h-4 w-4 rounded-full bg-primary"></span>
           <span>Centro/Vértice</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-red-600 rounded-full"></span>
+          <span className="h-4 w-4 rounded-full bg-destructive"></span>
           <span>Focos</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-sky-500 rounded-full"></span>
+          <span className="h-4 w-4 rounded-full bg-success"></span>
           <span>Vértices</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-4 h-4 border-2 border-gray-400" style={{ borderStyle: 'dashed' }}></span>
+          <span className="h-4 w-4 border-2 border-muted-foreground" style={{ borderStyle: 'dashed' }}></span>
           <span>Asíntotas / Directriz</span>
         </div>
       </div>

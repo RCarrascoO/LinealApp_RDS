@@ -9,7 +9,7 @@ export function ModoDefensaLimites() {
           <ShieldCheck className="h-5 w-5 text-muted-foreground" />
           <h3 className="text-lg font-semibold text-foreground">Modo Defensa de Límites</h3>
         </div>
-        <span className="inline-flex w-fit items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+        <span className="inline-flex w-fit items-center rounded-full border border-success/20 bg-success/10 px-3 py-1 text-xs font-semibold text-success">
           Formulario listo para exposición oral
         </span>
       </div>
@@ -19,7 +19,7 @@ export function ModoDefensaLimites() {
       </p>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4">
           <span className="text-sm font-medium text-foreground">Límite izquierdo</span>
           <input
             type="text"
@@ -29,7 +29,7 @@ export function ModoDefensaLimites() {
           />
         </label>
 
-        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4">
           <span className="text-sm font-medium text-foreground">Límite derecho</span>
           <input
             type="text"
@@ -39,7 +39,7 @@ export function ModoDefensaLimites() {
           />
         </label>
 
-        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4 lg:col-span-2">
+        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4 lg:col-span-2">
           <span className="text-sm font-medium text-foreground">¿Existe el límite?</span>
           <select
             defaultValue="no"
@@ -52,7 +52,7 @@ export function ModoDefensaLimites() {
           </select>
         </label>
 
-        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4 lg:col-span-2">
+        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4 lg:col-span-2">
           <span className="text-sm font-medium text-foreground">Tipo de discontinuidad</span>
           <select
             defaultValue="salto"
@@ -65,7 +65,7 @@ export function ModoDefensaLimites() {
           </select>
         </label>
 
-        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4 lg:col-span-2">
+        <label className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4 lg:col-span-2">
           <span className="text-sm font-medium text-foreground">Justificación escrita</span>
           <textarea
             rows={4}
@@ -76,7 +76,7 @@ export function ModoDefensaLimites() {
         </label>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-medium text-foreground">Acción de defensa</p>
           <p className="text-xs text-muted-foreground">

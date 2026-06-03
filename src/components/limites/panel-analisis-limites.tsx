@@ -11,10 +11,10 @@ export function PanelAnalisisLimites() {
 
       <div className="mt-2 flex flex-col gap-4">
         {/* 1. Límite por izquierda */}
-        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Aproximación por izquierda</span>
-            <div className="rounded border border-primary/20 bg-primary/10 px-2 py-1">
+            <div className="rounded border border-primary/30 bg-primary/10 px-2 py-1">
               <span className="font-mono text-sm font-semibold text-primary">L = 4</span>
             </div>
           </div>
@@ -24,10 +24,10 @@ export function PanelAnalisisLimites() {
         </div>
 
         {/* 2. Límite por derecha */}
-        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-foreground">Aproximación por derecha</span>
-            <div className="rounded border border-primary/20 bg-primary/10 px-2 py-1">
+            <div className="rounded border border-primary/30 bg-primary/10 px-2 py-1">
               <span className="font-mono text-sm font-semibold text-primary">L = 7</span>
             </div>
           </div>
@@ -37,26 +37,26 @@ export function PanelAnalisisLimites() {
         </div>
 
         {/* 3. Existencia del límite (No Existe) */}
-        <div className="flex flex-col gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+        <div className="flex flex-col gap-2 rounded-lg border border-destructive/40 bg-destructive/10 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-destructive">
               <AlertCircle className="h-4 w-4" />
               <span className="text-sm font-medium">Existencia del límite</span>
             </div>
-            <div className="rounded border border-destructive/20 bg-destructive/10 px-2 py-1 text-destructive">
+            <div className="rounded border border-destructive/30 bg-destructive/15 px-2 py-1 text-destructive">
               <span className="font-mono text-sm font-semibold">No existe</span>
             </div>
           </div>
-          <div className="mt-1 font-mono text-sm text-destructive/80">
+          <div className="mt-1 font-mono text-sm text-destructive">
             lim x→a f(x)
           </div>
-          <p className="mt-2 text-xs text-destructive/70">
+          <p className="mt-2 text-xs text-destructive/90">
             El límite no existe porque los límites laterales no coinciden (4 ≠ 7).
           </p>
         </div>
 
         {/* 4. Conclusión de continuidad */}
-        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/30 p-4">
+        <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted p-4">
           <div className="flex items-center gap-2 text-foreground">
             <span className="text-sm font-medium">Conclusión de continuidad</span>
           </div>

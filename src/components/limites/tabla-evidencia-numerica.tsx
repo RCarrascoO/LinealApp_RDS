@@ -17,7 +17,7 @@ type BloqueEvidenciaProps = {
 
 function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia }: BloqueEvidenciaProps) {
   return (
-    <article className="flex h-full flex-col gap-4 rounded-xl border border-border bg-muted/30 p-4">
+    <article className="flex h-full flex-col gap-4 rounded-xl border border-border bg-muted p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
@@ -26,7 +26,7 @@ function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia }
           </div>
           <p className="mt-1 text-xs text-muted-foreground">{descripcion}</p>
         </div>
-        <span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+        <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
           {tendencia}
         </span>
       </div>
@@ -99,7 +99,7 @@ export function TablaEvidenciaNumerica() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-muted/30">
+      <div className="overflow-hidden rounded-xl border border-border bg-muted">
         <div className="flex items-center gap-2 border-b border-border bg-card px-4 py-3">
           <ArrowRight className="h-4 w-4 text-primary" />
           <span className="text-sm font-semibold text-foreground">Conclusión textual</span>
@@ -119,7 +119,7 @@ export function TablaEvidenciaNumerica() {
           </div>
           <div className="rounded-lg border border-border bg-card px-4 py-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Conclusión de existencia</p>
-            <p className={`mt-1 text-sm ${existeLimite ? 'text-emerald-600' : 'text-destructive'}`}>
+            <p className={`mt-1 text-sm font-medium ${existeLimite ? 'text-success' : 'text-destructive'}`}>
               {existeLimite
                 ? `El límite general existe porque ambos límites laterales coinciden en ${limiteIzquierda}.`
                 : `El límite general no existe porque los límites laterales son diferentes (${limiteIzquierda} ≠ ${limiteDerecha}).`}

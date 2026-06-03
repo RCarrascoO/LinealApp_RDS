@@ -24,15 +24,15 @@ export function PanelTipoDiscontinuidad() {
             key={opcion.id}
             className={`flex items-center justify-between rounded-lg border p-4 transition-colors ${
               opcion.activa
-                ? 'border-primary/50 bg-primary/5 opacity-100'
-                : 'border-border bg-muted/50 opacity-50'
+                ? 'border-primary/40 bg-primary/10'
+                : 'border-border bg-muted text-muted-foreground'
             }`}
           >
-            <span className={`font-medium ${opcion.activa ? 'text-primary' : 'text-foreground'}`}>
+            <span className={`font-medium ${opcion.activa ? 'text-primary' : 'text-muted-foreground'}`}>
               {opcion.label}
             </span>
             {opcion.activa && (
-              <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+              <span className="rounded-full border border-success/20 bg-success/10 px-2.5 py-0.5 text-xs font-semibold text-success">
                 Detectada
               </span>
             )}
