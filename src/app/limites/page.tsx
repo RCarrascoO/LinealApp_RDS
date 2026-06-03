@@ -2,6 +2,7 @@ import React from 'react';
 import { PanelTipoDiscontinuidad } from '../../components/limites/panel-tipo-discontinuidad';
 import { PanelAnalisisLimites } from '../../components/limites/panel-analisis-limites';
 import { TablaEvidenciaNumerica } from '../../components/limites/tabla-evidencia-numerica';
+import { ModoDefensaLimites } from '../../components/limites/modo-defensa-limites';
 
 export default function PaginaLimites() {
   return (
@@ -29,12 +30,8 @@ export default function PaginaLimites() {
       {/* 4. Tabla numérica (Persona 3 placeholder) */}
       <TablaEvidenciaNumerica />
 
-      {/* 5. Modo defensa (Persona 3 placeholder) */}
-      <section className="rounded-xl border border-dashed border-border bg-muted/30 p-6 flex flex-col items-center justify-center min-h-[100px]">
-        <p className="text-center text-sm font-medium text-muted-foreground">
-          [Placeholder] ModoDefensaLimites (Persona 3)
-        </p>
-      </section>
+      {/* 5. Modo defensa (Persona 3) */}
+      <ModoDefensaLimites />
     </main>
   );
 }
