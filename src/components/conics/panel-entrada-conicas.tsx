@@ -99,8 +99,8 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
         <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <h2 className="text-xl font-bold text-foreground mb-4">Clasificación de la cónica</h2>
           
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
-            {['circunferencia', 'hipérbola', 'parábola'].map((type) => {
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {['circunferencia', 'elipse', 'hipérbola', 'parábola'].map((type) => {
               const isActive = resultado.tipo === type.replace('ó', 'o').replace('á', 'a');
               
               return (

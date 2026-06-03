@@ -1,5 +1,5 @@
 export type ConicaResult = {
-  tipo: 'circunferencia' | 'hiperbola' | 'parabola' | 'ninguna';
+  tipo: 'circunferencia' | 'elipse' | 'hiperbola' | 'parabola' | 'ninguna';
   razon: string;
   formaCanonica: any;
   pasosGeneralACanonica: string[];
@@ -24,6 +24,10 @@ export function clasificarTipoConica(A: number, B: number): ConicaResult['tipo']
     return 'parabola';
   }
 
+  if (A !== 0 && B !== 0 && A * B > 0 && A !== B) {
+    return 'elipse';
+  }
+
   if (A * B < 0 && A !== B) {
     return 'hiperbola';
   }
@@ -37,6 +41,8 @@ export function clasificarConica(A: number, B: number, C: number, D: number, E: 
 
   if (tipo === 'circunferencia') {
     razon = `A = B = ${A} y ambos ≠ 0 → Circunferencia`;
+  } else if (tipo === 'elipse') {
+    razon = `A y B tienen el mismo signo, A ≠ B y ambos ≠ 0 → Elipse`;
   } else if (tipo === 'hiperbola') {
     razon = `A y B tienen signos opuestos → Hipérbola`;
   } else if (tipo === 'parabola') {
