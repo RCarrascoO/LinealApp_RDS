@@ -26,15 +26,13 @@ export function PanelResultadosConicas({ resultado, coeficientes, pasosCoeficien
           </span>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="space-y-4">
           <EquationForms resultado={resultado} coeficientes={coeficientes} />
-          <div>
-            <EcuacionPanel
-              coeficientes={coeficientes}
-              pasosConstruccion={pasosCoeficientes}
-              tipoConica={resultado.tipo}
-            />
-          </div>
+          <EcuacionPanel
+            coeficientes={coeficientes}
+            pasosConstruccion={pasosCoeficientes}
+            tipoConica={resultado.tipo}
+          />
         </div>
 
         <div className="mt-5">
