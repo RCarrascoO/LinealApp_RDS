@@ -7,14 +7,14 @@ interface Props {
 export function PanelProcedimientoMatematico({ pasosCoeficientes = [] }: Props) {
   const pasos = [
     {
-      title: 'Extracción de Coeficientes',
-      content: pasosCoeficientes[0] ?? 'Extrae los dígitos y calcula A, B, C, D, E según las reglas de mapeo.'
+      title: 'Extracción de Dígitos',
+      content: pasosCoeficientes[0] ?? 'Normaliza el RUT, separa los 8 dígitos del cuerpo y guarda el DV para evaluar v.'
     },
-    { title: 'Clasificación de la cónica', content: 'Usa determinantes y signos de coeficientes para clasificar como circunferencia, elipse, hipérbola o parábola.' },
-    { title: 'Completar el cuadrado (términos en x)', content: 'Agrupa los términos en x y completa el cuadrado: Ax² + Dx → A(x - h)² + constante.' },
-    { title: 'Completar el cuadrado (términos en y)', content: 'Agrupa los términos en y y completa el cuadrado: By² + Ey → B(y - k)² + constante.' },
-    { title: 'Derivación de la forma canónica', content: 'Divide para aislar 1 y obtener la forma canónica. Fórmula final resaltada abajo.' , finalFormula: '(x - h)²/a² + (y - k)²/b² = 1' },
-    { title: 'Verificación de la transformación inversa', content: 'Expande la forma canónica de nuevo a la forma general y compara coeficientes para verificar.' }
+    { title: 'Coeficientes base', content: pasosCoeficientes[1] ?? 'Calcula A, B, C, D y E únicamente con operaciones nativas de JS/TS.' },
+    { title: 'Ajustes secuenciales', content: pasosCoeficientes[2] ?? 'Aplica las reglas sobre d8, d1, d5, d6 y d7 en el orden indicado.' },
+    { title: 'Clasificación de la cónica', content: pasosCoeficientes[pasosCoeficientes.length - 1] ?? 'Clasifica por igualdad, ceros o signos opuestos de A y B.' },
+    { title: 'Forma general final', content: 'La ecuación queda estrictamente como Ax² + By² + Cx + Dy + E = 0.', finalFormula: 'Ax² + By² + Cx + Dy + E = 0' },
+    { title: 'Verificación manual', content: 'Comprueba que cada ajuste secuencial muta A o B sin introducir términos cruzados.' }
   ];
 
   return (

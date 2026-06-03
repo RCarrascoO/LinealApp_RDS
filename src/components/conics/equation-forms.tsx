@@ -15,36 +15,22 @@ function fmt(n?: number) {
 }
 
 export function EquationForms({ resultado, coeficientes }: Props) {
-  const { A, B, C, D, E, F = 0 } = coeficientes;
+  const { A, B, C, D, E } = coeficientes;
 
   const canonicalRaw =
     resultado.formaCanonica && Object.keys(resultado.formaCanonica).length > 0
       ? resultado.formaCanonica
       : null;
 
-  const terms = [
-    { coef: A, term: 'x²', color: 'text-rose-600' },
-    { coef: B, term: 'xy', color: 'text-purple-600' },
-    { coef: C, term: 'y²', color: 'text-emerald-600' },
-    { coef: D, term: 'x', color: 'text-amber-600' },
-    { coef: E, term: 'y', color: 'text-sky-600' },
-    { coef: F, term: '', color: 'text-slate-600' },
-  ];
-
-  const formatSigned = (value: number) => {
-    if (value === 0) return '0';
-    return value > 0 ? `+ ${fmt(value)}` : `- ${fmt(Math.abs(value))}`;
-  };
-
-  const renderTerm = (coef: number, term: string, color: string, last = false) => {
+  const renderTerm = (coef: number, term: string, color: string, isFirst = false) => {
     if (coef === 0) return null;
 
-    const sign = last ? '' : formatSigned(coef).startsWith('+') ? '+' : coef < 0 ? '−' : '';
     const numeric = fmt(Math.abs(coef));
+    const sign = coef < 0 ? '−' : isFirst ? '' : '+';
 
     return (
       <span className="inline-flex items-baseline gap-1 whitespace-nowrap">
-        {!last && sign && <span className="text-muted-foreground">{sign}</span>}
+        {sign && <span className="text-muted-foreground">{sign}</span>}
         <span className={`${color} font-semibold`}>{numeric}</span>
         {term ? <span className="ml-0.5">{term}</span> : null}
       </span>
@@ -59,12 +45,11 @@ export function EquationForms({ resultado, coeficientes }: Props) {
       </div>
       <div className="overflow-x-auto rounded-xl border border-border/70 bg-card/70 px-4 py-3">
         <div className="flex min-w-max items-center gap-4 font-mono text-lg text-foreground whitespace-nowrap">
-          {renderTerm(A, 'x²', 'text-rose-600')}
-          {renderTerm(B, 'xy', 'text-purple-600')}
-          {renderTerm(C, 'y²', 'text-emerald-600')}
-          {renderTerm(D, 'x', 'text-amber-600')}
-          {renderTerm(E, 'y', 'text-sky-600')}
-          {F !== 0 ? renderTerm(F, '', 'text-slate-600', true) : null}
+          {renderTerm(A, 'x²', 'text-rose-600', true)}
+          {renderTerm(B, 'y²', 'text-emerald-600')}
+          {renderTerm(C, 'x', 'text-amber-600')}
+          {renderTerm(D, 'y', 'text-sky-600')}
+          {renderTerm(E, '', 'text-slate-600')}
           <span className="pl-2 text-muted-foreground">= 0</span>
         </div>
       </div>

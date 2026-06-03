@@ -7,7 +7,7 @@ import { ConicaResult, CoeficientesConica } from '@/lib/clasificarConica';
 
 interface Props {
   estadoFlujo: EstadoFlujo;
-  onAnalyze: (digitos: number[], v: number) => void;
+  onAnalyze: (rut: string) => void;
   coeficientes: CoeficientesConica | null;
   resultado: ConicaResult | null;
   digitos: number[] | null;
@@ -17,17 +17,7 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
   const [rutInput, setRutInput] = useState('');
   
   const handleAnalyze = () => {
-    // Simple mock extraction for the UI (real validation logic is expected in the real app)
-    const normalized = rutInput.replace(/[^0-9kK]/g, '').toUpperCase();
-    if (normalized.length === 9) {
-      const nums = normalized.split('').slice(0, 8).map(n => parseInt(n, 10));
-      const dvChar = normalized.charAt(8);
-      const v = dvChar === 'K' ? 10 : parseInt(dvChar, 10);
-      onAnalyze(nums, v);
-    } else {
-      // fallback for testing
-      onAnalyze([1,2,3,4,5,6,7,8], 9);
-    }
+    onAnalyze(rutInput);
   };
 
   return (
@@ -82,18 +72,17 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-foreground">Coeficientes de la ecuación</h2>
             <div className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-              A𝑥² + Bxy + C𝑦² + D𝑥 + E𝑦 + F = 0
+              A𝑥² + B𝑦² + C𝑥 + D𝑦 + E = 0
             </div>
           </div>
           
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {[
               { label: 'A', desc: 'coef x²', val: coeficientes.A.toFixed(2) },
-              { label: 'B', desc: 'coef xy', val: '0.00' },
-              { label: 'C', desc: 'coef y²', val: coeficientes.B.toFixed(2) },
-              { label: 'D', desc: 'coef x', val: coeficientes.C.toFixed(2) },
-              { label: 'E', desc: 'coef y', val: coeficientes.D.toFixed(2) },
-              { label: 'F', desc: 'constante', val: coeficientes.E.toFixed(2) },
+              { label: 'B', desc: 'coef y²', val: coeficientes.B.toFixed(2) },
+              { label: 'C', desc: 'coef x', val: coeficientes.C.toFixed(2) },
+              { label: 'D', desc: 'coef y', val: coeficientes.D.toFixed(2) },
+              { label: 'E', desc: 'constante', val: coeficientes.E.toFixed(2) },
             ].map((coef, i) => (
               <div key={i} className="rounded-xl border border-border bg-muted p-3 text-center transition-colors hover:border-border">
                 <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{coef.desc}</div>
@@ -110,8 +99,8 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resu
         <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <h2 className="text-xl font-bold text-foreground mb-4">Clasificación de la cónica</h2>
           
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {['circunferencia', 'elipse', 'hipérbola', 'parábola'].map((type) => {
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+            {['circunferencia', 'hipérbola', 'parábola'].map((type) => {
               const isActive = resultado.tipo === type.replace('ó', 'o').replace('á', 'a');
               
               return (

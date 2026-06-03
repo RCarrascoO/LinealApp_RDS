@@ -1,122 +1,120 @@
-import { CoeficientesConica } from './clasificarConica';
+import { CoeficientesConica, clasificarTipoConica } from './clasificarConica';
 
 export type ResultadoCoeficientes = {
   coeficientes: CoeficientesConica;
+  clasificacion: 'circunferencia' | 'hiperbola' | 'parabola' | 'ninguna';
+  dv: string;
+  digitos: number[];
+  rutNormalizado: string;
+  v: number;
   pasos: string[];
 };
 
-function sumaDigitos(digitos: number[]): number {
-  return digitos.reduce((total, digito) => total + digito, 0);
+function extraerRut(rut: string): { digitos: number[]; dv: string; rutNormalizado: string } {
+  const rutLimpio = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+
+  if (rutLimpio.length < 2) {
+    return {
+      digitos: [0, 0, 0, 0, 0, 0, 0, 0],
+      dv: '0',
+      rutNormalizado: '00000000-0'
+    };
+  }
+
+  const dv = rutLimpio.slice(-1);
+  const cuerpo = rutLimpio.slice(0, -1).padStart(8, '0').slice(-8);
+  const digitos = cuerpo.split('').map((digito) => Number(digito));
+
+  return {
+    digitos,
+    dv,
+    rutNormalizado: `${cuerpo}-${dv}`
+  };
 }
 
-function baseCentro(digitos: number[]): { h: number; k: number } {
-  const h = ((digitos[0] ?? 0) * 10 + (digitos[1] ?? 0)) % 7 - 3;
-  const k = ((digitos[2] ?? 0) * 10 + (digitos[3] ?? 0)) % 7 - 3;
+function calcularV(dv: string): number {
+  if (dv === 'K' || dv === 'k') {
+    return 10;
+  }
 
-  return { h, k };
+  if (dv === '0') {
+    return 11;
+  }
+
+  return Number(dv);
 }
 
-export function calcularCoeficientes(digitos: number[], v: number): ResultadoCoeficientes {
-  const suma = sumaDigitos(digitos);
-  const { h, k } = baseCentro(digitos);
-  const variante = Math.abs(v) % 4;
+export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
+  const { digitos, dv, rutNormalizado } = extraerRut(rut);
+  const v = calcularV(dv);
+  const [d1, d2, d3, d4, d5, d6, d7, d8] = digitos;
   const pasos: string[] = [];
 
-  pasos.push(`Dígitos del RUT recibidos: [${digitos.join(', ')}]`);
-  pasos.push(`Valor auxiliar v: ${v}`);
-  pasos.push(`Centro de trabajo derivado del RUT: (${h}, ${k})`);
+  pasos.push(`RUT normalizado: ${rutNormalizado}`);
+  pasos.push(`Dígitos extraídos: [${digitos.join(', ')}]`);
+  pasos.push(`Dígito verificador: ${dv} → v = ${v}`);
 
-  if (variante === 0) {
-    const radio = 2 + (suma % 4);
-    const factor = 1 / (radio * radio);
-    const coeficientes = {
-      A: factor,
-      B: factor,
-      C: -2 * factor * h,
-      D: -2 * factor * k,
-      E: factor * (h * h + k * k - radio * radio)
-    };
+  const coeficientesBase: CoeficientesConica = {
+    A: (d1 + d2) / v,
+    B: (d3 + d4) / v,
+    C: -(d5 + d6),
+    D: -(d7 + d8),
+    E: d1 + d3 + d5 + d7
+  };
 
-    pasos.push(`Se genera una circunferencia de radio ${radio}.`);
-    pasos.push('La ecuación canónica usada es (x - h)² + (y - k)² = r².');
+  let { A, B, C, D, E } = coeficientesBase;
 
-    return { coeficientes, pasos };
-  }
+  pasos.push(`Coeficientes base: A = (${d1} + ${d2}) / ${v} = ${A}, B = (${d3} + ${d4}) / ${v} = ${B}`);
+  pasos.push(`C = -(${d5} + ${d6}) = ${C}, D = -(${d7} + ${d8}) = ${D}, E = ${d1} + ${d3} + ${d5} + ${d7} = ${E}`);
 
-  if (variante === 1) {
-    const ejeHorizontal = (suma + v) % 2 === 0;
-    const semiejeMayor = 4 + (suma % 3);
-    const semiejeMenor = 2 + (digitos[4] ?? 0) % 2;
-    const denomX = ejeHorizontal ? semiejeMayor : semiejeMenor;
-    const denomY = ejeHorizontal ? semiejeMenor : semiejeMayor;
-    const A = 1 / (denomX * denomX);
-    const B = 1 / (denomY * denomY);
-
-    const coeficientes = {
-      A,
-      B,
-      C: -2 * A * h,
-      D: -2 * B * k,
-      E: A * h * h + B * k * k - 1
-    };
-
-    pasos.push(`Se genera una elipse con eje ${ejeHorizontal ? 'horizontal' : 'vertical'}.`);
-    pasos.push(`Semiejes de trabajo: ${denomX} y ${denomY}.`);
-    pasos.push('La ecuación canónica usada es (x - h)²/a² + (y - k)²/b² = 1.');
-
-    return { coeficientes, pasos };
-  }
-
-  if (variante === 2) {
-    const ejeHorizontal = (suma + v) % 2 === 0;
-    const a = 3 + (suma % 3);
-    const b = 2 + (digitos[5] ?? 0) % 2;
-    const A = ejeHorizontal ? 1 / (a * a) : -1 / (b * b);
-    const B = ejeHorizontal ? -1 / (b * b) : 1 / (a * a);
-
-    const coeficientes = {
-      A,
-      B,
-      C: -2 * A * h,
-      D: -2 * B * k,
-      E: A * h * h + B * k * k - 1
-    };
-
-    pasos.push(`Se genera una hipérbola con eje ${ejeHorizontal ? 'horizontal' : 'vertical'}.`);
-    pasos.push(`Parámetros de trabajo: a = ${a}, b = ${b}.`);
-    pasos.push('La ecuación canónica usada es (x - h)²/a² - (y - k)²/b² = 1 o su versión vertical.');
-
-    return { coeficientes, pasos };
-  }
-
-  const pBase = 1 + (suma % 3);
-  const p = (digitos[7] ?? 0) % 2 === 0 ? pBase : -pBase;
-  const esVertical = (v + suma) % 2 === 0;
-  let coeficientes: CoeficientesConica;
-
-  if (esVertical) {
-    coeficientes = {
-      A: 1,
-      B: 0,
-      C: -2 * h,
-      D: -4 * p,
-      E: h * h + 4 * p * k
-    };
-    pasos.push('Se genera una parábola vertical.');
-    pasos.push(`Parámetro focal p = ${p}.`);
-    pasos.push('La ecuación canónica usada es (x - h)² = 4p(y - k).');
+  if (d8 % 2 !== 0) {
+    B = -B;
+    pasos.push(`Regla 1: d8 = ${d8} es impar, entonces B = -B → ${B}`);
   } else {
-    coeficientes = {
-      A: 0,
-      B: 1,
-      C: -4 * p,
-      D: -2 * k,
-      E: k * k + 4 * p * h
-    };
-    pasos.push('Se genera una parábola horizontal.');
-    pasos.push(`Parámetro focal p = ${p}.`);
-    pasos.push('La ecuación canónica usada es (y - k)² = 4p(x - h).');
+    pasos.push(`Regla 1: d8 = ${d8} es par, B no cambia.`);
   }
 
-  return { coeficientes, pasos };
+  if (d1 === d2) {
+    B = A;
+    pasos.push(`Regla 2: d1 === d2, entonces B = A → ${B}`);
+  } else {
+    pasos.push(`Regla 2: d1 !== d2, B no cambia.`);
+  }
+
+  if ((d5 + d6) % 3 === 0) {
+    pasos.push(`Regla 3: d5 + d6 = ${d5 + d6} es múltiplo de 3.`);
+
+    if (d7 % 2 === 0) {
+      B = 0;
+      pasos.push(`Regla 3.1: d7 = ${d7} es par, entonces B = 0.`);
+    } else {
+      pasos.push(`Regla 3.1: d7 = ${d7} es impar, B no cambia.`);
+    }
+
+    if (d7 % 2 !== 0) {
+      A = 0;
+      pasos.push(`Regla 4: d7 = ${d7} es impar, entonces A = 0.`);
+    } else {
+      pasos.push(`Regla 4: d7 = ${d7} es par, A no cambia.`);
+    }
+  } else {
+    pasos.push(`Regla 3: d5 + d6 = ${d5 + d6} no es múltiplo de 3, no se aplican las reglas anidadas.`);
+  }
+
+  const clasificacion = clasificarTipoConica(A, B);
+
+  pasos.push(`Coeficientes finales: A = ${A}, B = ${B}, C = ${C}, D = ${D}, E = ${E}`);
+  pasos.push(`Clasificación final: ${clasificacion}`);
+
+  const coeficientes = { A, B, C, D, E };
+
+  return {
+    coeficientes,
+    clasificacion,
+    dv,
+    digitos,
+    rutNormalizado,
+    v,
+    pasos
+  };
 }

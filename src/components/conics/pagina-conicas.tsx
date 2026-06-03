@@ -19,16 +19,15 @@ export function PaginaConicas() {
   const [estadoFlujo, setEstadoFlujo] = useState<EstadoFlujo>('esperando');
   const [digitosRut, setDigitosRut] = useState<number[]>([]);
 
-  const manejarValidated = async (digitos: number[], v: number) => {
-    const todosDigitos = [...digitos, v];
-    setDigitosRut(todosDigitos);
+  const manejarValidated = async (rut: string) => {
     setEstadoFlujo('calculando');
     setResultado(null);
     setCoeficientes(null);
     setPasosCoeficientes([]);
     await demora(200);
 
-    const generado = calcularCoeficientes(digitos, v);
+    const generado = calcularCoeficientes(rut);
+    setDigitosRut([...generado.digitos, generado.v]);
     setCoeficientes(generado.coeficientes);
     setPasosCoeficientes(generado.pasos);
 

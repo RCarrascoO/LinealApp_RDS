@@ -1,5 +1,5 @@
 export type ConicaResult = {
-  tipo: 'circunferencia' | 'elipse' | 'hiperbola' | 'parabola' | 'ninguna';
+  tipo: 'circunferencia' | 'hiperbola' | 'parabola' | 'ninguna';
   razon: string;
   formaCanonica: any;
   pasosGeneralACanonica: string[];
@@ -15,22 +15,34 @@ export type CoeficientesConica = {
   F?: number;
 };
 
+export function clasificarTipoConica(A: number, B: number): ConicaResult['tipo'] {
+  if (A === B && A !== 0) {
+    return 'circunferencia';
+  }
+
+  if ((A === 0 && B !== 0) || (A !== 0 && B === 0)) {
+    return 'parabola';
+  }
+
+  if (A * B < 0 && A !== B) {
+    return 'hiperbola';
+  }
+
+  return 'ninguna';
+}
+
 export function clasificarConica(A: number, B: number, C: number, D: number, E: number): ConicaResult {
-  let tipo: ConicaResult['tipo'] = 'ninguna';
+  let tipo: ConicaResult['tipo'] = clasificarTipoConica(A, B);
   let razon = '';
 
-  if (A === B && A !== 0) {
-    tipo = 'circunferencia';
+  if (tipo === 'circunferencia') {
     razon = `A = B = ${A} y ambos ≠ 0 → Circunferencia`;
-  } else if (A !== 0 && B !== 0 && A * B > 0 && A !== B) {
-    tipo = 'elipse';
-    razon = `A y B tienen mismo signo, A ≠ B, ambos ≠ 0 → Elipse`;
-  } else if (A * B < 0) {
-    tipo = 'hiperbola';
+  } else if (tipo === 'hiperbola') {
     razon = `A y B tienen signos opuestos → Hipérbola`;
-  } else if ((A === 0 && B !== 0) || (A !== 0 && B === 0)) {
-    tipo = 'parabola';
+  } else if (tipo === 'parabola') {
     razon = `Exactamente uno de A o B es 0 → Parábola`;
+  } else {
+    razon = `Los coeficientes finales no cumplen las reglas de clasificación solicitadas`;
   }
 
   const pasosGeneralACanonica = ['Paso 1: Agrupar términos', 'Paso 2: Completar cuadrados'];
