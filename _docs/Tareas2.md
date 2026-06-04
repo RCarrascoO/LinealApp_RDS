@@ -1,154 +1,143 @@
-## Convención obligatoria para esta página (aplica a todos)
+## Persona 1 — RUT (mejora/arreglo de input RUT + integración entre módulos)
 
-- Ruta objetivo: `app/(dashboard)/limites/page.tsx`
-- Carpeta UI objetivo: `components/limites/`
-- Componentes/funciones en español (ejemplos base):
-    - `PaginaLimites`
-    - `EncabezadoLimites`
-    - `TarjetaFuncionPorTramos`
-    - `PanelAnalisisLimites`
-    - `PanelTipoDiscontinuidad`
-    - `TablaEvidenciaNumerica`
-    - `ModoDefensaLimites`
-- No tocar topbar (ya implementada).
-- Todo el trabajo es de **interfaz**.
+### Tarea 1.1 — Crear utilidad única de validación de RUT
 
----
+- Crear módulo compartido (ej: `lib/rut/validar-rut.ts`).
+- Exponer funciones: normalizar, validar formato, calcular DV, validar completo.
+- Eliminar lógica duplicada de validación en componentes actuales.
 
-## Persona 1 — Estructura principal y bloques superiores
+### Tarea 1.2 — Crear estado global de RUT validado
 
-### Tarea 1.1 — Crear la página base de Límites
+- Crear store/context (ej: `hooks/use-rut-validado.ts` o `context/rut-context.tsx`).
+- Guardar: `rutOriginal`, `rutNormalizado`, `esValido`, `fechaValidacion`.
+- Persistir en `localStorage` para navegación entre páginas.
 
-- Crear `app/(dashboard)/limites/page.tsx`.
-- Exportar `function PaginaLimites()`.
-- Estructura vertical con `gap-6 p-6`.
-- Orden de secciones:
-    1. encabezado
-    2. función por tramos
-    3. grilla 2 columnas (discontinuidad + análisis de límites)
-    4. tabla numérica
-    5. modo defensa **Criterio:** la página renderiza el esqueleto completo en el orden exacto.
+### Tarea 1.3 — Mover input de RUT a Conicas
 
-### Tarea 1.2 — Implementar encabezado de la página
+- Agregar bloque “RUT” en sección cónicas.
+- Conectar input al validador compartido.
+- Mostrar estado visual: válido/inválido.
 
-- Crear `components/limites/encabezado-limites.tsx`.
-- Exportar `EncabezadoLimites`.
-- Título y subtítulo de límites (texto académico, una sola línea de subtítulo en desktop).
-- Jerarquía tipográfica consistente con otras páginas. **Criterio:** header visualmente consistente y reutilizable.
+### Tarea 1.4 — Mover input de RUT a Límites
 
-### Tarea 1.3 — Implementar tarjeta “Función por tramos”
+- Agregar bloque “RUT” en límites (misma UX de conicas).
+- Reusar exactamente la misma validación compartida.
+- Al validar, actualizar el estado global.
 
-- Crear `components/limites/tarjeta-funcion-por-tramos.tsx`.
-- Exportar `TarjetaFuncionPorTramos`.
-- Incluir:
-    - título de tarjeta
-    - badge con punto crítico (ej. `x = 2`)
-    - bloque matemático central de la función por tramos con llave visual
-    - franja inferior resaltando “Punto crítico” **Criterio:** tarjeta completa con jerarquía clara y foco en el punto crítico.
+### Tarea 1.5 — Auto-reuso del RUT entre Conicas y Límites
 
-### Tarea 1.4 — Integrar componentes en `PaginaLimites`
+- Si ya existe RUT válido en store, autocompletar input al entrar.
+- Evitar pedir ingreso repetido del RUT.
+- Botón secundario: “Cambiar RUT”.
 
-- Importar y montar `EncabezadoLimites` + `TarjetaFuncionPorTramos`.
-- Dejar conectados los placeholders de los otros bloques para Persona 2 y 3. **Criterio:** layout principal funcional sin romper responsive.
+### Tarea 1.6 — Eliminar navegación de página RUT
 
-### Tarea 1.5 — Ajuste responsive del bloque superior
+- Quitar item “RUT Validation” del sidebar.
+- Redirigir rutas antiguas de `/rut` a `/conics` (o pantalla definida por equipo).
+- Verificar que no queden links huérfanos.
 
-- En móvil: reducir espacios internos del bloque de función.
-- En desktop: mantener ancho máximo del contenido matemático centrado. **Criterio:** no hay desbordes horizontales en móvil.
+### Tarea 1.7 — Actualizar textos de interfaz por cambio de flujo
+
+- Cambiar textos donde diga que RUT se valida en módulo separado.
+- Ajustar copy en conicas/límites indicando “usar RUT validado”.
 
 ---
 
-## Persona 2 — Paneles de análisis (columna media)
+## Persona 2 — Conicas (inputs pedagógicos vinculados a la gráfica, según feedback + imagen)
 
-### Tarea 2.1 — Implementar panel de tipo de discontinuidad
+### Tarea 2.1 — Crear capa de “entradas manuales” dentro del card de visualización
 
-- Crear `components/limites/panel-tipo-discontinuidad.tsx`.
-- Exportar `PanelTipoDiscontinuidad`.
-- Lista de 3 opciones: removible, salto, infinita.
-- Una opción activa con badge “Detectada”.
-- Inactivas con menor opacidad. **Criterio:** panel visual listo con estados activo/inactivo.
+- En card “Gráfica de la cónica”, agregar zona de inputs ligada al gráfico.
+- Mantener misma estética oscura tipo imagen de referencia.
 
-### Tarea 2.2 — Implementar panel de análisis de límites
+### Tarea 2.2 — Inputs manuales para círculo/elipse
 
-- Crear `components/limites/panel-analisis-limites.tsx`.
-- Exportar `PanelAnalisisLimites`.
-- Secciones internas obligatorias:
-    1. límite por izquierda
-    2. límite por derecha
-    3. existencia del límite
-    4. conclusión de continuidad
-- Cada sección en tarjeta interna con color semántico. **Criterio:** panel completo con lectura paso a paso.
+- Campos: `centro`, `vértice superior`, `vértice inferior`, `vértice izquierdo`, `vértice derecho`, `foco 1`, `foco 2`.
+- Dejar inicialmente vacíos (no autollenar).
 
-### Tarea 2.3 — Crear bloque de notación matemática consistente
+### Tarea 2.3 — Inputs manuales para hipérbola/parábola
 
-- Dentro de `PanelAnalisisLimites`, estandarizar estilo de:
-    - `lim x→a⁻`
-    - `lim x→a⁺`
-    - `lim x→a`
-- Usar tipografía monoespaciada para expresiones. **Criterio:** notación homogénea en todo el panel.
+- Hipérbola: `centro`, `vértices`, `focos`, `asíntotas`.
+- Parábola: `vértice`, `foco`, `directriz`.
+- Mostrar/ocultar campos según tipo de cónica detectada.
 
-### Tarea 2.4 — Integrar ambos paneles en grilla de 2 columnas
+### Tarea 2.4 — Ubicar visualmente los inputs “asociados” al área gráfica
 
-- En `PaginaLimites`, usar `grid gap-6 lg:grid-cols-2`.
-- Columna izquierda: `PanelTipoDiscontinuidad`.
-- Columna derecha: `PanelAnalisisLimites`. **Criterio:** en móvil apila; en desktop quedan lado a lado.
+- No dejarlos desconectados en otra sección.
+- Mantener proximidad directa (debajo o lateral inmediata del canvas).
 
-### Tarea 2.5 — Estados visuales de “resultado no existe”
+### Tarea 2.5 — Añadir marcadores visuales mínimos en gráfico
 
-- En panel de análisis, reforzar estado negativo con color destructivo.
-- Mostrar texto de justificación corto debajo. **Criterio:** el estado “no existe” se identifica sin ambigüedad.
+- Etiquetas tipo `C(...)`, `V1(...)`, `F1(...)` al estilo de la imagen.
+- Leyenda inferior con colores por elemento (centro/vértice/focos/asíntotas-directriz).
 
----
+### Tarea 2.6 — Trazas visuales para asíntotas/directriz
 
-## Persona 3 — Evidencia numérica, modo defensa y tema oscuro de la página
+- Activar capa punteada para asíntotas/directriz.
+- Control de visibilidad desde toggles ya existentes.
 
-### Tarea 3.1 — Implementar tabla de evidencia numérica
+### Tarea 2.7 — Estado “modo defensa”
 
-- Crear `components/limites/tabla-evidencia-numerica.tsx`.
-- Exportar `TablaEvidenciaNumerica`.
-- Dos bloques:
-    - aproximación por izquierda
-    - aproximación por derecha
-- Fila final resumen con tendencia (`→`). **Criterio:** tabla clara, legible y separada por enfoque lateral.
+- Botón/toggle “Modo defensa”.
+- En este modo: mantener inputs vacíos y ocultar resultados calculados automáticos.
 
-### Tarea 3.2 — Implementar bloque de conclusión bajo tabla
+### Tarea 2.8 — Validación visual de inputs pedagógicos
 
-- Dentro de `TablaEvidenciaNumerica`, agregar resumen textual final:
-    - valor que se aproxima por izquierda
-    - valor por derecha
-    - conclusión de existencia **Criterio:** conclusión conectada directamente con los datos de la tabla.
-
-### Tarea 3.3 — Implementar modo defensa de límites
-
-- Crear `components/limites/modo-defensa-limites.tsx`.
-- Exportar `ModoDefensaLimites`.
-- Campos de interfaz:
-    - límite izquierdo
-    - límite derecho
-    - ¿existe el límite?
-    - tipo de discontinuidad
-    - justificación escrita
-- Botón de acción visual (sin lógica compleja). **Criterio:** formulario completo listo para uso en defensa oral.
-
-### Tarea 3.4 — Integrar tabla + modo defensa en la página
-
-- En `PaginaLimites`, montar:
-    - `TablaEvidenciaNumerica`
-    - `ModoDefensaLimites`
-- Mantener separación vertical consistente con el resto. **Criterio:** flujo visual completo de arriba hacia abajo.
-
-### Tarea 3.5 — Implementar tema oscuro específico para página de límites
-
-- Revisar todos los componentes de `components/limites/` y reemplazar colores fijos por tokens (`bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, etc.).
-- Ajustar badges/estados semánticos para contraste en oscuro.
-- Verificar que bloques con color (izq/der/destructivo/advertencia) sigan legibles en dark. **Criterio:** página de límites usable en dark mode sin zonas lavadas ni texto de bajo contraste.
+- Indicador simple por campo: pendiente/completado.
+- No bloquear navegación, solo feedback de completitud.
 
 ---
 
-## Checklist final de validación (los 3)
+## Persona 3 — Conicas (flujo de defensa) + cierre de interfaz de Límites
 
-- Solo se trabajó interfaz de la página de límites.
-- Nombres de archivos y funciones en español.
-- Responsive correcto (móvil y desktop).
-- Topbar intacta.
-- Tema oscuro validado específicamente en `/limites`.
+### Tarea 3.1 — Reorganizar panel de elementos cónicos para defensa
+
+- Convertir panel actual en formato de “respuesta del estudiante”.
+- Campos editables en lugar de solo lectura.
+
+### Tarea 3.2 — Separar “resultado del sistema” vs “respuesta del estudiante”
+
+- Dos vistas claras:
+    - Vista A: solución calculada (docente/equipo).
+    - Vista B: campos vacíos de defensa.
+- Evitar mezclar ambas simultáneamente.
+
+### Tarea 3.3 — Indicador de progreso de defensa en Conicas
+
+- Checklist visual: centro, vértices, focos, ejes, asíntotas/directriz.
+- Marcar automáticamente cada ítem cuando el input correspondiente tenga valor.
+
+### Tarea 3.4 — Ajuste fino dark mode en card de gráfica de Conicas
+
+- Verificar contraste en: grilla, puntos, etiquetas, leyenda, bordes punteados.
+- Igualar sensación visual a referencia oscura entregada.
+
+### Tarea 3.5 — Completar interfaz de página Límites (pendiente EID)
+
+- Revisar que exista flujo completo visual:
+    - función por tramos,
+    - límites laterales,
+    - clasificación de discontinuidad,
+    - evidencia numérica,
+    - modo defensa.
+- Dejar todo consistente con el nuevo flujo de RUT reutilizable.
+
+### Tarea 3.6 — Inputs de defensa en Límites (vacíos)
+
+- Campos manuales: límite izquierdo, límite derecho, existencia del límite, tipo de discontinuidad, justificación.
+- En modo defensa, no mostrar respuesta automática final.
+
+### Tarea 3.7 — Alinear copy y etiquetas académicas en Límites
+
+- Homogeneizar términos: “límite lateral izquierdo/derecho”, “existe/no existe”, “discontinuidad de salto/removible/infinita”.
+- Mantener nomenclatura coherente con Conicas.
+
+---
+
+## Entregable final esperado (equipo completo)
+
+- Sin página independiente de validación RUT.
+- RUT validado una sola vez y reutilizado en Conicas/Límites.
+- Conicas con inputs pedagógicos vacíos claramente vinculados a la gráfica.
+- Interfaz de Límites completa para defensa.
+- Consistencia visual (incluyendo dark mode) y foco pedagógico cumplido.

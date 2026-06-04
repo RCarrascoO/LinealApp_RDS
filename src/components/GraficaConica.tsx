@@ -173,11 +173,13 @@ export function GraficaConica({ resultado, toggles }: Props) {
               y={(x) => k + pendiente1 * (x - h)}
               color="#9ca3af"
               opacity={0.5}
+              style="dashed"
             />
             <Plot.OfX
               y={(x) => k + pendiente2 * (x - h)}
               color="#9ca3af"
               opacity={0.5}
+              style="dashed"
             />
           </>
         ) : null}
@@ -323,12 +325,14 @@ export function GraficaConica({ resultado, toggles }: Props) {
               y={() => directrizY}
               color="#9ca3af"
               opacity={0.5}
+              style="dashed"
             />
           ) : (
             <Plot.OfY
               x={() => directrizX}
               color="#9ca3af"
               opacity={0.5}
+              style="dashed"
             />
           )
         ) : null}
