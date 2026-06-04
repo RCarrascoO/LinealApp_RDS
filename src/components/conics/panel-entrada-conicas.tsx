@@ -4,48 +4,30 @@ import { useState } from 'react';
 import { Info, Calculator, IterationCcw, CheckCircle2 } from 'lucide-react';
 import { EstadoFlujo } from './pagina-conicas';
 import { ConicaResult, CoeficientesConica } from '@/lib/clasificarConica';
+import { RutForm } from '@/components/RutForm';
 
 interface Props {
   estadoFlujo: EstadoFlujo;
   onAnalyze: (rut: string) => void;
+  onClear: () => void; // <-- NUEVO
   coeficientes: CoeficientesConica | null;
   resultado: ConicaResult | null;
   digitos: number[] | null;
 }
 
-export function PanelEntradaConicas({ estadoFlujo, onAnalyze, coeficientes, resultado, digitos }: Props) {
-  const [rutInput, setRutInput] = useState('');
-  
-  const handleAnalyze = () => {
-    onAnalyze(rutInput);
-  };
+export function PanelEntradaConicas({ estadoFlujo, onAnalyze, onClear, coeficientes, resultado, digitos }: Props) {
+  const [rutValido, setRutValido] = useState('');
 
   return (
     <div className="space-y-6">
       
       {/* TAREA 2.2: Card Entrada de RUT */}
-      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-        <div className="mb-4">
-          <h2 className="text-xl font-bold text-foreground">Ingreso de RUT</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Ingresa un número de RUT chileno para generar una sección cónica</p>
-        </div>
-        
-        <div className="flex gap-3">
-          <input
-            type="text"
-            className="flex-1 font-mono text-lg rounded-xl border border-border px-4 py-2 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
-            placeholder="12.345.678-9"
-            value={rutInput}
-            onChange={(e) => setRutInput(e.target.value)}
-          />
-          <button
-            onClick={handleAnalyze}
-            className="rounded-xl bg-primary px-6 py-2 font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            Analizar
-          </button>
-        </div>
-      </section>
+      <RutForm 
+        onValidated={(rut) => setRutValido(rut)} 
+        onContinue={() => onAnalyze(rutValido)}
+        onClear={onClear} // <-- Le pasamos la prop al RutForm
+        textContinue="Ver Análisis de Cónicas"
+      />
 
       {/* TAREA 2.3: Card Dígitos Extraídos */}
       {digitos && digitos.length > 0 && (

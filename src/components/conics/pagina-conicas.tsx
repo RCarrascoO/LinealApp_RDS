@@ -19,6 +19,15 @@ export function PaginaConicas() {
   const [estadoFlujo, setEstadoFlujo] = useState<EstadoFlujo>('esperando');
   const [digitosRut, setDigitosRut] = useState<number[]>([]);
 
+  // Función para resetear todos los estados cuando el usuario limpia el RUT
+  const manejarLimpiar = () => {
+    setEstadoFlujo('esperando');
+    setResultado(null);
+    setCoeficientes(null);
+    setPasosCoeficientes([]);
+    setDigitosRut([]);
+  };
+
   const manejarValidated = async (rut: string) => {
     setEstadoFlujo('calculando');
     setResultado(null);
@@ -62,42 +71,43 @@ export function PaginaConicas() {
           </div>
         </header>
 
-        {/* Grid principal de 2 columnas (input/results) - Tarea 2.1 */}
-        <div className="grid gap-6 xl:grid-cols-2">
-          {/* Columna Izquierda: Persona 2 */}
-          <div className="space-y-6">
-            <PanelEntradaConicas 
-              estadoFlujo={estadoFlujo}
-              onAnalyze={manejarValidated}
-              coeficientes={coeficientes}
-              resultado={resultado}
-              digitos={digitosRut}
-            />
-          </div>
+        <div className="space-y-6">
+          <PanelEntradaConicas 
+            estadoFlujo={estadoFlujo}
+            onAnalyze={manejarValidated}
+            onClear={manejarLimpiar} // <-- Pasamos el manejador
+            coeficientes={coeficientes}
+            resultado={resultado}
+            digitos={digitosRut}
+          />
 
-          {/* Columna Derecha: Persona 3 */}
-          <div className="space-y-6">
-            {resultado && coeficientes && (
-              <PanelResultadosConicas
-                resultado={resultado}
-                coeficientes={coeficientes}
-                pasosCoeficientes={pasosCoeficientes}
-              />
-            )}
-            
-            <PanelGraficaConicas resultado={resultado} />
-          </div>
+          {estadoFlujo !== 'esperando' && (
+            <div className="grid gap-6 xl:grid-cols-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-6">
+                {resultado && coeficientes && (
+                  <PanelResultadosConicas
+                    resultado={resultado}
+                    coeficientes={coeficientes}
+                    pasosCoeficientes={pasosCoeficientes}
+                  />
+                )}
+              </div>
+              <div className="space-y-6">
+                <PanelGraficaConicas resultado={resultado} />
+              </div>
+            </div>
+          )}
         </div>
         
-        {/* Debajo: panel matemático completo - Tarea 2.1 (Hecho por persona 3) */}
-        <div className="space-y-6">
-            <PanelProcedimientoMatematico
-              pasosCoeficientes={pasosCoeficientes}
-              coeficientes={coeficientes}
-              resultado={resultado}
-            />
-        </div>
-
+        {estadoFlujo !== 'esperando' && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <PanelProcedimientoMatematico
+                pasosCoeficientes={pasosCoeficientes}
+                coeficientes={coeficientes}
+                resultado={resultado}
+              />
+          </div>
+        )}
       </div>
     </main>
   );

@@ -1,94 +1,79 @@
 "use client";
 
 import { useState, ChangeEvent, FormEvent } from 'react';
-import { Info } from 'lucide-react';
+import { Info, ChevronDown, ChevronUp } from 'lucide-react';
 import { validarRUT, ValidacionRutResult } from '../lib/rut';
 
 interface RutFormProps {
-  // onValidated recibe los dígitos del RUT (rellenados con ceros a la izquierda si son menos de 8) y el valor v.
-  onValidated: (digitos: number[], v: number) => void;
+  onValidated: (rut: string, digitos: number[], v: number) => void;
+  onContinue?: () => void;
+  onClear?: () => void; // <-- NUEVO: Prop para avisar que se limpió
+  textContinue?: string;
 }
 
-export function RutForm({ onValidated }: RutFormProps) {
+export function RutForm({ onValidated, onContinue, onClear, textContinue }: RutFormProps) {
   const [rutInput, setRutInput] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [esValido, setEsValido] = useState<boolean | null>(null);
   const [detallesAlgoritmo, setDetallesAlgoritmo] = useState<ValidacionRutResult['detalles'] | null>(null);
+  const [mostrarPasos, setMostrarPasos] = useState<boolean>(false);
 
-  // Se ejecuta cada vez que el usuario presiona una tecla
   const manejarCambioDeTexto = (evento: ChangeEvent<HTMLInputElement>) => {
-    // 1. Tomamos lo que el usuario escribió y borramos cualquier letra o símbolo (excepto números y K)
     let textoEscrito = evento.target.value.replace(/[^0-9kK]/g, '').toUpperCase();
     
-    // Si borró todo, dejamos el formulario limpio
     if (textoEscrito.length === 0) {
       setRutInput('');
       setEsValido(null);
       setDetallesAlgoritmo(null);
       setError('');
+      if (onClear) onClear(); // <-- Avisar al padre si borran todo manualmente
       return;
     }
 
-    // 2. Si hay más de un número, le ponemos formato bonito (puntos y guion)
     if (textoEscrito.length > 1) {
       const cuerpo = textoEscrito.slice(0, -1);
       const digitoVerificador = textoEscrito.slice(-1);
       
-      // Esta expresión busca grupos de 3 números para colocarles un punto
       const cuerpoConPuntos = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       textoEscrito = `${cuerpoConPuntos}-${digitoVerificador}`;
     }
 
-    // 3. Guardamos el texto formateado en la memoria de la pantalla
     setRutInput(textoEscrito);
-    
-    // 4. Si el usuario vuelve a escribir, borramos el mensaje de error o éxito anterior
     setEsValido(null);
     setDetallesAlgoritmo(null);
     setError('');
   };
 
-  // Se ejecuta cuando el usuario presiona el botón "Validar"
   const handleClear = () => {
     setRutInput('');
     setEsValido(null);
     setDetallesAlgoritmo(null);
     setError('');
+    if (onClear) onClear(); // <-- NUEVO: Avisamos al componente padre
   };
 
   const manejarValidacion = (evento: FormEvent) => {
-    // Evitamos que la página web recargue por defecto
     evento.preventDefault();
 
-    // Verificamos que no esté vacío
     if (!rutInput || rutInput.length < 3) {
       setError('Por favor, ingresa un RUT completo.');
       setEsValido(false);
       return;
     }
 
-    // 1. Usamos nuestra función matemática para validar el RUT
     const resultado = validarRUT(rutInput);
     
-    // 2. Guardamos los resultados para que se muestren en pantalla
     setDetallesAlgoritmo(resultado.detalles || null);
     setEsValido(resultado.valido);
 
-    // 3. Si es matemáticamente correcto, preparamos los datos para la siguiente fase
     if (resultado.valido) {
-      setError(''); // Borramos errores viejos
+      setError(''); 
       
-      // Tomamos el RUT ingresado, borramos puntos/guion y le quitamos el dígito verificador
       const soloNumeros = rutInput.replace(/[^0-9kK]/g, '').slice(0, -1);
-      
-      // Si el RUT es corto (ej: un millón), rellenamos con ceros a la izquierda hasta tener siempre 8 números
       const ochoNumeros = soloNumeros.padStart(8, '0');
-      
-      // Convertimos el texto "12345678" en una lista matemática de números: [1, 2, 3, 4, 5, 6, 7, 8]
       const listaDeDigitos = ochoNumeros.split('').map((letra: string) => parseInt(letra, 10));
 
-      // 4. Enviamos esta lista y el valor 'v' hacia afuera para construir la cónica más adelante
-      onValidated(listaDeDigitos, resultado.v);
+      onValidated(rutInput, listaDeDigitos, resultado.v);
     } else {
       setError('El RUT ingresado no es válido según el algoritmo (Módulo 11).');
     }
@@ -105,47 +90,59 @@ export function RutForm({ onValidated }: RutFormProps) {
         </div>
         
         <div className="p-6">
-          <form onSubmit={manejarValidacion} className="flex flex-col items-center space-y-6">
-            <input
-              id="rut"
-              type="text"
-              value={rutInput}
-              onChange={manejarCambioDeTexto}
-              placeholder="12.345.678-9"
-              maxLength={12}
-              className={`w-full max-w-[320px] bg-transparent text-center font-mono text-3xl font-medium tracking-wider outline-none transition-colors border-b-2 placeholder:text-muted-foreground/40
-                ${esValido === true ? 'border-success text-success focus:border-success' : ''}
-                ${esValido === false ? 'border-destructive text-destructive focus:border-destructive' : ''}
-                ${esValido === null ? 'border-border text-foreground focus:border-primary' : ''}
-              `}
-            />
+          <form onSubmit={manejarValidacion} className="flex flex-col items-center space-y-6 w-full">
+            <div className="flex gap-3 w-full">
+              <input
+                id="rut"
+                type="text"
+                value={rutInput}
+                onChange={manejarCambioDeTexto}
+                placeholder="12.345.678-9"
+                maxLength={12}
+                className={`flex-1 font-mono text-lg rounded-xl border border-border px-4 py-2 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500 transition-colors bg-transparent text-center tracking-wider outline-none
+                  ${esValido === true ? 'border-success text-success focus:border-success focus:ring-success' : ''}
+                  ${esValido === false ? 'border-destructive text-destructive focus:border-destructive focus:ring-destructive' : ''}
+                  ${esValido === null ? 'border-border text-foreground' : ''}
+                `}
+              />
+            </div>
 
             {error && <p className="text-sm font-medium text-destructive">❌ {error}</p>}
-            
-            <div className="flex w-full max-w-[320px] gap-3">
+
+            <div className="flex w-full max-w-[320px] gap-3 pt-2">
               <button 
                 type="button" 
                 onClick={handleClear}
                 className="w-1/2 rounded-[10px] border border-border bg-transparent px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted active:scale-[0.99]"
               >
-                Limpiar Rut
+                Limpiar
               </button>
               <button 
                 type="submit" 
                 className="w-1/2 rounded-[10px] border border-transparent bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-[#1D4ED8] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Validar Rut
+                Validar
               </button>
             </div>
             
-            {esValido === true && <p className="text-sm font-medium text-success">✅ RUT válido. Generando cónica...</p>}
+            {esValido === true && <p className="text-sm font-medium text-success">✅ RUT válido. Procesando parámetros...</p>}
           </form>
         </div>
       </div>
 
       {detallesAlgoritmo && (
         <div className="flex flex-col gap-4">
-          <div className="rounded-[14px] border border-border bg-card p-6 shadow-[0_8px_24px_rgba(17,24,39,0.08)]">
+          <button
+            onClick={() => setMostrarPasos(!mostrarPasos)}
+            className="flex w-full items-center justify-between rounded-[14px] border border-border bg-card p-4 shadow-sm hover:bg-muted/50 transition-colors"
+          >
+            <span className="font-semibold text-foreground">Pasos del Algoritmo Módulo 11</span>
+            {mostrarPasos ? <ChevronUp className="h-5 w-5 text-muted-foreground" /> : <ChevronDown className="h-5 w-5 text-muted-foreground" />}
+          </button>
+
+          {mostrarPasos && (
+            <>
+              <div className="rounded-[14px] border border-border bg-card p-6 shadow-[0_8px_24px_rgba(17,24,39,0.08)]">
             <h3 className="mb-4 text-sm font-semibold text-muted-foreground border-b border-border pb-2">Paso 1: Extracción de Digitos</h3>
             <div className="flex flex-wrap gap-2 text-sm font-mono items-center">
               <span className="text-muted-foreground">Original:</span>
@@ -223,6 +220,20 @@ export function RutForm({ onValidated }: RutFormProps) {
               {esValido ? 'RUT VALIDO' : 'RUT INVALIDO'}
             </div>
           </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {esValido && onContinue && (
+        <div className="mt-2 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <button
+            type="button"
+            onClick={onContinue}
+            className="w-full rounded-[14px] bg-primary px-8 py-4 text-lg font-bold text-primary-foreground hover:bg-[#1D4ED8] transition-all shadow-[0_8px_24px_rgba(37,99,235,0.2)] hover:shadow-[0_12px_28px_rgba(37,99,235,0.3)] active:scale-[0.98]"
+          >
+            {textContinue || 'Continuar al Análisis'}
+          </button>
         </div>
       )}
     </div>

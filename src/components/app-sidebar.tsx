@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
 
 const items = [
-  { label: 'Validación de Rut', href: '/rut', mark: 'R' },
   { label: 'Secciones Cónicas', href: '/conicas', mark: 'C' },
   { label: 'Límites', href: '/limites', mark: 'L' }
 ];
