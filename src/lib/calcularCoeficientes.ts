@@ -2,7 +2,7 @@ import { CoeficientesConica, clasificarTipoConica } from './clasificarConica';
 
 export type ResultadoCoeficientes = {
   coeficientes: CoeficientesConica;
-  clasificacion: 'circunferencia' | 'hiperbola' | 'parabola' | 'ninguna';
+  clasificacion: 'circunferencia' | 'elipse' | 'hiperbola' | 'parabola' | 'ninguna';
   dv: string;
   digitos: number[];
   rutNormalizado: string;

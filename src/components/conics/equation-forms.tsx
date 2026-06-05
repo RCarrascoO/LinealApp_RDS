@@ -143,13 +143,9 @@ export function EquationForms({ resultado, coeficientes }: Props) {
       </div>
     );
   };
-
   return (
     <div className="space-y-4">
-      <div className="space-y-4">
-        {renderGeneral()}
-        {renderCanonical()}
-      </div>
+      {renderGeneral()}
     </div>
   );
 }

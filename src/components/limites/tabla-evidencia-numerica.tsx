@@ -68,8 +68,8 @@ export function TablaEvidenciaNumerica() {
     { x: 'a + 0.01', fx: '6.98', observacion: 'La evidencia numérica converge a 7.' },
   ];
 
-  const limiteIzquierda = '4';
-  const limiteDerecha = '7';
+  const limiteIzquierda: string = '4';
+  const limiteDerecha: string = '7';
   const existeLimite = limiteIzquierda === limiteDerecha;
 
   return (
