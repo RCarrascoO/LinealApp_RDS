@@ -8,9 +8,25 @@ import { ModoDefensaLimites } from '../../components/limites/modo-defensa-limite
 import { EncabezadoLimites } from '../../components/limites/encabezado-limites';
 import { TarjetaFuncionPorTramos } from '../../components/limites/tarjeta-funcion-por-tramos';
 import { PanelEntradaLimites } from '../../components/limites/panel-entrada-limites';
+import { LimitesProvider, useLimitesContext } from '../../components/limites/LimitesContext';
+import { calcularLimites } from '../../lib/limites';
 
-export default function PaginaLimites() {
+function PaginaLimitesContenido() {
+  const { resultado, setResultado, setRutIngresado } = useLimitesContext();
   const [mostrarAnalisis, setMostrarAnalisis] = useState(false);
+
+  const handleAnalyze = (rut: string, digitos: number[], v: number) => {
+    const calc = calcularLimites(digitos, v);
+    setResultado(calc);
+    setRutIngresado(rut);
+    setMostrarAnalisis(true);
+  };
+
+  const handleClear = () => {
+    setResultado(null);
+    setRutIngresado('');
+    setMostrarAnalisis(false);
+  };
 
   return (
     <main className="bg-background flex flex-col gap-6 p-4 sm:p-6 mx-auto w-full max-w-[1200px]">
@@ -19,11 +35,11 @@ export default function PaginaLimites() {
 
       {/* Input de RUT para límites */}
       <PanelEntradaLimites 
-        onAnalyze={() => setMostrarAnalisis(true)} 
-        onClear={() => setMostrarAnalisis(false)} // <-- NUEVO: Oculta el análisis al limpiar
+        onAnalyze={handleAnalyze} 
+        onClear={handleClear}
       />
 
-      {mostrarAnalisis && (
+      {mostrarAnalisis && resultado && (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           {/* 2. Función por tramos */}
           <TarjetaFuncionPorTramos />
@@ -42,5 +58,13 @@ export default function PaginaLimites() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function PaginaLimites() {
+  return (
+    <LimitesProvider>
+      <PaginaLimitesContenido />
+    </LimitesProvider>
   );
 }
