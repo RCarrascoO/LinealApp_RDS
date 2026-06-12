@@ -28,7 +28,7 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
 
   const existeLimite = limIzquierda === limDerecha;
 
-  let tipoDiscontinuidad: 'continua' | 'removible' | 'salto' | 'infinita' = 'continua';
+  let tipoDiscontinuidad: ResultadoLimites['tipoDiscontinuidad'] = 'continua';
   
   if (
     !Number.isFinite(limIzquierda) || 
@@ -67,7 +67,11 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
   });
 
   let justificacion = '';
-  switch (tipoDiscontinuidad) {
+  // Use explicit cast to escape TS control-flow narrowing: the if/else above
+  // only assigns 'continua'|'salto'|'infinita', so TS would wrongly mark
+  // 'removible' as unreachable without the cast.
+  const tipoSwitch = tipoDiscontinuidad as ResultadoLimites['tipoDiscontinuidad'];
+  switch (tipoSwitch) {
     case 'continua':
       justificacion = 'La función es continua en este punto ya que ambos límites laterales son iguales y coinciden con el valor de la función.';
       break;

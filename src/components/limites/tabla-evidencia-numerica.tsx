@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, LucideIcon } from 'lucide-react';
+import { useLimitesContext } from './LimitesContext';
 
 type EvidenciaItem = {
   x: string;
@@ -13,9 +16,10 @@ type BloqueEvidenciaProps = {
   icono: LucideIcon;
   items: EvidenciaItem[];
   tendencia: string;
+  limiteNum: number;
 };
 
-function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia }: BloqueEvidenciaProps) {
+function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia, limiteNum }: BloqueEvidenciaProps) {
   return (
     <article className="flex h-full flex-col gap-4 rounded-xl border border-border bg-muted p-4">
       <div className="flex items-start justify-between gap-3">
@@ -41,13 +45,22 @@ function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia }
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={`${titulo}-${item.x}`} className="border-t border-border/70">
-                <td className="px-3 py-2 font-mono text-xs text-foreground">{item.x}</td>
-                <td className="px-3 py-2 font-mono text-xs text-foreground">{item.fx}</td>
-                <td className="px-3 py-2 text-xs text-muted-foreground">{item.observacion}</td>
-              </tr>
-            ))}
+            {items.map((item) => {
+              const fxNum = parseFloat(item.fx);
+              const cercaDelLimite = Math.abs(fxNum - limiteNum) < 0.1;
+              return (
+                <tr
+                  key={`${titulo}-${item.x}`}
+                  className={`border-t border-border/70 transition-colors ${cercaDelLimite ? 'bg-primary/5' : ''}`}
+                >
+                  <td className="px-3 py-2 font-mono text-xs text-foreground">{item.x}</td>
+                  <td className={`px-3 py-2 font-mono text-xs font-semibold ${cercaDelLimite ? 'text-primary' : 'text-foreground'}`}>
+                    {item.fx}
+                  </td>
+                  <td className="px-3 py-2 text-xs text-muted-foreground">{item.observacion}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -56,21 +69,27 @@ function BloqueEvidencia({ titulo, descripcion, icono: Icono, items, tendencia }
 }
 
 export function TablaEvidenciaNumerica() {
-  const evidenciaIzquierda: EvidenciaItem[] = [
-    { x: 'a - 0.30', fx: '4.40', observacion: 'Se acerca al valor límite desde arriba.' },
-    { x: 'a - 0.10', fx: '4.18', observacion: 'La secuencia desciende de forma estable.' },
-    { x: 'a - 0.01', fx: '4.02', observacion: 'El valor se estabiliza en torno a 4.' },
-  ];
+  const { resultado } = useLimitesContext();
 
-  const evidenciaDerecha: EvidenciaItem[] = [
-    { x: 'a + 0.30', fx: '6.60', observacion: 'Se aproxima al valor esperado desde abajo.' },
-    { x: 'a + 0.10', fx: '6.82', observacion: 'La secuencia mantiene una tendencia ascendente.' },
-    { x: 'a + 0.01', fx: '6.98', observacion: 'La evidencia numérica converge a 7.' },
-  ];
+  if (!resultado) {
+    return (
+      <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold text-foreground">Tabla de Evidencia Numérica</h3>
+          <p className="text-sm text-muted-foreground">
+            Ingresa un RUT para calcular la evidencia numérica del límite.
+          </p>
+        </div>
+        <div className="flex items-center justify-center rounded-xl border border-dashed border-border bg-muted/50 py-10">
+          <p className="text-sm text-muted-foreground">Esperando análisis de RUT…</p>
+        </div>
+      </section>
+    );
+  }
 
-  const limiteIzquierda: string = '4';
-  const limiteDerecha: string = '7';
-  const existeLimite = limiteIzquierda === limiteDerecha;
+  const { evidenciaIzquierda, evidenciaDerecha, limIzquierda, limDerecha, existeLimite } = resultado;
+  const limiteIzquierda = limIzquierda.toFixed(4);
+  const limiteDerecha = limDerecha.toFixed(4);
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -87,7 +106,8 @@ export function TablaEvidenciaNumerica() {
           descripcion="Valores tomados cuando x se acerca a a por valores menores."
           icono={ChevronLeft}
           items={evidenciaIzquierda}
-          tendencia="→ 4"
+          tendencia={`→ ${limIzquierda}`}
+          limiteNum={limIzquierda}
         />
 
         <BloqueEvidencia
@@ -95,7 +115,8 @@ export function TablaEvidenciaNumerica() {
           descripcion="Valores tomados cuando x se acerca a a por valores mayores."
           icono={ChevronRight}
           items={evidenciaDerecha}
-          tendencia="→ 7"
+          tendencia={`→ ${limDerecha}`}
+          limiteNum={limDerecha}
         />
       </div>
 
@@ -108,13 +129,17 @@ export function TablaEvidenciaNumerica() {
           <div className="rounded-lg border border-border bg-card px-4 py-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Valor por izquierda</p>
             <p className="mt-1 text-sm text-foreground">
-              La función se aproxima a <span className="font-mono font-semibold text-primary">{limiteIzquierda}</span> cuando x se acerca a a por la izquierda.
+              La función se aproxima a{' '}
+              <span className="font-mono font-semibold text-primary">{limiteIzquierda}</span>{' '}
+              cuando x se acerca a a por la izquierda.
             </p>
           </div>
           <div className="rounded-lg border border-border bg-card px-4 py-3">
             <p className="text-xs uppercase tracking-wide text-muted-foreground">Valor por derecha</p>
             <p className="mt-1 text-sm text-foreground">
-              La función se aproxima a <span className="font-mono font-semibold text-primary">{limiteDerecha}</span> cuando x se acerca a a por la derecha.
+              La función se aproxima a{' '}
+              <span className="font-mono font-semibold text-primary">{limiteDerecha}</span>{' '}
+              cuando x se acerca a a por la derecha.
             </p>
           </div>
           <div className="rounded-lg border border-border bg-card px-4 py-3">

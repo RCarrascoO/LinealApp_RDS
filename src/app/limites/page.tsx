@@ -8,6 +8,7 @@ import { ModoDefensaLimites } from '../../components/limites/modo-defensa-limite
 import { EncabezadoLimites } from '../../components/limites/encabezado-limites';
 import { TarjetaFuncionPorTramos } from '../../components/limites/tarjeta-funcion-por-tramos';
 import { PanelEntradaLimites } from '../../components/limites/panel-entrada-limites';
+import { GraficoFuncionLimites } from '../../components/limites/grafico-funcion-limites';
 import { LimitesProvider, useLimitesContext } from '../../components/limites/LimitesContext';
 import { calcularLimites } from '../../lib/limites';
 
@@ -44,16 +45,19 @@ function PaginaLimitesContenido() {
           {/* 2. Función por tramos */}
           <TarjetaFuncionPorTramos />
 
-          {/* 3. Grilla 2 columnas (Persona 2) */}
+          {/* 3. Gráfico de la función por tramos (Persona 3) */}
+          <GraficoFuncionLimites />
+
+          {/* 4. Grilla 2 columnas (Persona 2) */}
           <div className="grid gap-6 lg:grid-cols-2">
             <PanelTipoDiscontinuidad />
             <PanelAnalisisLimites />
           </div>
 
-          {/* 4. Tabla numérica (Persona 3 placeholder) */}
+          {/* 5. Tabla numérica (Persona 3) */}
           <TablaEvidenciaNumerica />
 
-          {/* 5. Modo defensa (Persona 3) */}
+          {/* 6. Modo defensa (Persona 3) */}
           <ModoDefensaLimites />
         </div>
       )}
