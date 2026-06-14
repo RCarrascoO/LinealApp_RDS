@@ -19,7 +19,12 @@ function buildPoints(
   const leftPts: { x: number; y: number }[] = [];
   const rightPts: { x: number; y: number }[] = [];
 
-  for (let xi = a - 3; xi <= a + 3 + 1e-9; xi = Math.round((xi + 0.1) * 1e9) / 1e9) {
+  // Use integer steps to avoid floating-point drift that caused leftPts to be
+  // empty: instead of accumulating xi += 0.1 (which drifts), compute each xi
+  // from scratch using an integer index so the split at `a` is always exact.
+  const STEPS = 60; // covers [a-3, a+3] in 0.1 increments → 60 intervals
+  for (let i = 0; i <= STEPS; i++) {
+    const xi = Math.round((a - 3 + i * 0.1) * 1e9) / 1e9;
     if (xi < a) {
       leftPts.push({ x: xi, y: f1(xi) });
     } else {
@@ -245,7 +250,7 @@ export function GraficoFuncionLimites() {
             y1={PAD}
             x2={critX}
             y2={SVG_H - PAD}
-            stroke="hsl(var(--primary))"
+            stroke="var(--primary)"
             strokeOpacity={0.4}
             strokeWidth={1.5}
             strokeDasharray="5,4"
@@ -254,7 +259,7 @@ export function GraficoFuncionLimites() {
             x={critX + 4}
             y={PAD + 12}
             fontSize={9}
-            fill="hsl(var(--primary))"
+            fill="var(--primary)"
             fillOpacity={0.8}
           >
             x = {a}
@@ -265,7 +270,7 @@ export function GraficoFuncionLimites() {
             <polyline
               points={leftLine}
               fill="none"
-              stroke="hsl(var(--primary))"
+              stroke="var(--primary)"
               strokeWidth={2.5}
               strokeLinejoin="round"
               strokeLinecap="round"
@@ -277,7 +282,7 @@ export function GraficoFuncionLimites() {
             <polyline
               points={rightLine}
               fill="none"
-              stroke="hsl(var(--secondary-foreground, 270 50% 60%))"
+              stroke="var(--secondary-foreground, #a855f7)"
               strokeWidth={2.5}
               strokeLinejoin="round"
               strokeLinecap="round"
@@ -296,8 +301,8 @@ export function GraficoFuncionLimites() {
                 cx={leftPt.sx}
                 cy={leftPt.sy}
                 r={6}
-                fill="hsl(var(--card))"
-                stroke="hsl(var(--primary))"
+                fill="var(--card)"
+                stroke="var(--primary)"
                 strokeWidth={2.5}
               />
               {/* Right limit: filled */}
@@ -317,7 +322,7 @@ export function GraficoFuncionLimites() {
             x={leftPt.sx - 10}
             y={leftPt.sy - 10}
             fontSize={9}
-            fill="hsl(var(--primary))"
+            fill="var(--primary)"
             textAnchor="middle"
           >
             {limIzquierda.toFixed(2)}
@@ -349,7 +354,7 @@ export function GraficoFuncionLimites() {
         <span className="flex items-center gap-1.5">
           <span
             className="inline-block h-3 w-3 rounded-full border-2"
-            style={{ borderColor: 'hsl(var(--primary))', background: 'transparent' }}
+            style={{ borderColor: 'var(--primary)', background: 'transparent' }}
           />
           Límite por izquierda
         </span>

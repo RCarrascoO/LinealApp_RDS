@@ -18,6 +18,8 @@ export function PaginaConicas() {
   const [pasosCoeficientes, setPasosCoeficientes] = useState<string[]>([]);
   const [estadoFlujo, setEstadoFlujo] = useState<EstadoFlujo>('esperando');
   const [digitosRut, setDigitosRut] = useState<number[]>([]);
+  const [colisionReglas, setColisionReglas] = useState<boolean>(false);
+  const [reglasDescartadas, setReglasDescartadas] = useState<string[]>([]);
 
   // Función para resetear todos los estados cuando el usuario limpia el RUT
   const manejarLimpiar = () => {
@@ -26,6 +28,8 @@ export function PaginaConicas() {
     setCoeficientes(null);
     setPasosCoeficientes([]);
     setDigitosRut([]);
+    setColisionReglas(false);
+    setReglasDescartadas([]);
   };
 
   const manejarValidated = async (rut: string) => {
@@ -39,6 +43,8 @@ export function PaginaConicas() {
     setDigitosRut([...generado.digitos, generado.v]);
     setCoeficientes(generado.coeficientes);
     setPasosCoeficientes(generado.pasos);
+    setColisionReglas(generado.colisionReglas);
+    setReglasDescartadas(generado.reglasDescartadas);
 
     setEstadoFlujo('clasificando');
     await demora(200);
@@ -89,6 +95,8 @@ export function PaginaConicas() {
                     resultado={resultado}
                     coeficientes={coeficientes}
                     pasosCoeficientes={pasosCoeficientes}
+                    colisionReglas={colisionReglas}
+                    reglasDescartadas={reglasDescartadas}
                   />
                 )}
               </div>

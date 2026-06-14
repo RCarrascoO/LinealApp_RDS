@@ -28,19 +28,17 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
 
   const existeLimite = limIzquierda === limDerecha;
 
+  const d8 = digitos[7];
+  const modulo3 = d8 % 3;
+
   let tipoDiscontinuidad: ResultadoLimites['tipoDiscontinuidad'] = 'continua';
   
-  if (
-    !Number.isFinite(limIzquierda) || 
-    !Number.isFinite(limDerecha) || 
-    Number.isNaN(limIzquierda) || 
-    Number.isNaN(limDerecha)
-  ) {
-    tipoDiscontinuidad = 'infinita';
-  } else if (!existeLimite) {
+  if (modulo3 === 0) {
+    tipoDiscontinuidad = 'removible';
+  } else if (modulo3 === 1) {
     tipoDiscontinuidad = 'salto';
-  } else {
-    tipoDiscontinuidad = 'continua';
+  } else if (modulo3 === 2) {
+    tipoDiscontinuidad = 'infinita';
   }
 
   const f1 = (x: number) => a1 * x * x + a2 * x - b1;

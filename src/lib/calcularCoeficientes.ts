@@ -8,6 +8,8 @@ export type ResultadoCoeficientes = {
   rutNormalizado: string;
   v: number;
   pasos: string[];
+  colisionReglas: boolean;
+  reglasDescartadas: string[];
 };
 
 function extraerRut(rut: string): { digitos: number[]; dv: string; rutNormalizado: string } {
@@ -67,38 +69,53 @@ export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
   pasos.push(`Coeficientes base: A = (${d1} + ${d2}) / ${v} = ${A}, B = (${d3} + ${d4}) / ${v} = ${B}`);
   pasos.push(`C = -(${d5} + ${d6}) = ${C}, D = -(${d7} + ${d8}) = ${D}, E = ${d1} + ${d3} + ${d5} + ${d7} = ${E}`);
 
-  if (d8 % 2 !== 0) {
-    B = -B;
-    pasos.push(`Regla 1: d8 = ${d8} es impar, entonces B = -B → ${B}`);
-  } else {
-    pasos.push(`Regla 1: d8 = ${d8} es par, B no cambia.`);
+  let colisionReglas = false;
+  let reglasAplicables = 0;
+  const esParabola = (d5 + d6) % 3 === 0;
+  const esCirculo = d1 === d2;
+  const esHiperbola = d8 % 2 !== 0;
+
+  if (esParabola) reglasAplicables++;
+  if (esCirculo) reglasAplicables++;
+  if (esHiperbola) reglasAplicables++;
+
+  if (reglasAplicables > 1) {
+    colisionReglas = true;
+    pasos.push(`Colisión detectada: el RUT cumple ${reglasAplicables} condiciones iniciales simultáneamente.`);
   }
 
-  if (d1 === d2) {
-    B = A;
-    pasos.push(`Regla 2: d1 === d2, entonces B = A → ${B}`);
-  } else {
-    pasos.push(`Regla 2: d1 !== d2, B no cambia.`);
-  }
+  const reglasDescartadas: string[] = [];
 
-  if ((d5 + d6) % 3 === 0) {
-    pasos.push(`Regla 3: d5 + d6 = ${d5 + d6} es múltiplo de 3.`);
-
+  // JERARQUÍA ESTRICTA
+  if (esParabola) {
+    pasos.push(`Regla 1 (Parábola): d5 + d6 = ${d5 + d6} es múltiplo de 3.`);
     if (d7 % 2 === 0) {
       B = 0;
-      pasos.push(`Regla 3.1: d7 = ${d7} es par, entonces B = 0.`);
+      pasos.push(`Regla 1.1: d7 = ${d7} es par, entonces B = 0.`);
     } else {
-      pasos.push(`Regla 3.1: d7 = ${d7} es impar, B no cambia.`);
-    }
-
-    if (d7 % 2 !== 0) {
       A = 0;
-      pasos.push(`Regla 4: d7 = ${d7} es impar, entonces A = 0.`);
-    } else {
-      pasos.push(`Regla 4: d7 = ${d7} es par, A no cambia.`);
+      pasos.push(`Regla 1.1: d7 = ${d7} es impar, entonces A = 0.`);
     }
+    
+    if (esCirculo) reglasDescartadas.push('Circunferencia');
+    if (esHiperbola) reglasDescartadas.push('Hipérbola');
+    
+    if (esCirculo || esHiperbola) {
+       pasos.push(`Las reglas de Circunferencia y/o Hipérbola fueron omitidas por jerarquía para no destruir la Parábola.`);
+    }
+  } else if (esCirculo) {
+    B = A;
+    pasos.push(`Regla 2 (Circunferencia): d1 === d2, entonces B = A → ${B}`);
+    
+    if (esHiperbola) {
+       reglasDescartadas.push('Hipérbola');
+       pasos.push(`La regla de Hipérbola fue omitida por jerarquía para no destruir la Circunferencia (evitar que B=-A).`);
+    }
+  } else if (esHiperbola) {
+    B = -B;
+    pasos.push(`Regla 3 (Hipérbola): d8 = ${d8} es impar, entonces B = -B → ${B}`);
   } else {
-    pasos.push(`Regla 3: d5 + d6 = ${d5 + d6} no es múltiplo de 3, no se aplican las reglas anidadas.`);
+    pasos.push(`No se activaron reglas de modificación de coeficientes A y B.`);
   }
 
   const clasificacion = clasificarTipoConica(A, B);
@@ -115,6 +132,8 @@ export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
     digitos,
     rutNormalizado,
     v,
-    pasos
+    pasos,
+    colisionReglas,
+    reglasDescartadas
   };
 }
