@@ -13,12 +13,13 @@ import {
 interface Props {
   resultado: ConicaResult;
   toggles?: Record<string, boolean>;
+  modoDefensa?: boolean;
 }
 
 /**
  * Componente que renderiza la gráfica de una cónica usando Mafs
  */
-export function GraficaConica({ resultado, toggles }: Props) {
+export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
   const { tipo, formaCanonica } = resultado;
 
   // Extraer parámetros de la forma canónica
@@ -80,9 +81,11 @@ export function GraficaConica({ resultado, toggles }: Props) {
         {toggles?.points ?? true ? (
           <>
             <Point x={h} y={k} color="#f97316" />
-            <Text x={h} y={k + 0.8} size={14} color="#f97316">
-              C({h.toFixed(1)}, {k.toFixed(1)})
-            </Text>
+            {!modoDefensa && (
+              <Text x={h} y={k + 0.8} size={14} color="#f97316">
+                C({h.toFixed(1)}, {k.toFixed(1)})
+              </Text>
+            )}
           </>
         ) : null}
       </>
@@ -106,9 +109,11 @@ export function GraficaConica({ resultado, toggles }: Props) {
         {toggles?.points ?? true ? (
           <>
             <Point x={h} y={k} color="#f97316" />
-            <Text x={h - 1.5} y={k - 1} size={12} color="#f97316">
-              C({h.toFixed(1)}, {k.toFixed(1)})
-            </Text>
+            {!modoDefensa && (
+              <Text x={h - 1.5} y={k - 1} size={12} color="#f97316">
+                C({h.toFixed(1)}, {k.toFixed(1)})
+              </Text>
+            )}
           </>
         ) : null}
 
@@ -118,32 +123,88 @@ export function GraficaConica({ resultado, toggles }: Props) {
             <>
               <Point x={h + c} y={k} color="#dc2626" />
               <Point x={h - c} y={k} color="#dc2626" />
-              <Text x={h + c} y={k - 0.8} size={11} color="#dc2626">
-                F({(h + c).toFixed(1)}, {k.toFixed(1)})
-              </Text>
+              {!modoDefensa && (
+                <>
+                  <Text x={h + c} y={k - 0.8} size={11} color="#dc2626">
+                    F({(h + c).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h - c} y={k - 0.8} size={11} color="#dc2626">
+                    F({(h - c).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           ) : (
             <>
               <Point x={h} y={k + c} color="#dc2626" />
               <Point x={h} y={k - c} color="#dc2626" />
-              <Text x={h + 0.8} y={k + c} size={11} color="#dc2626">
-                F({h.toFixed(1)}, {(k + c).toFixed(1)})
-              </Text>
+              {!modoDefensa && (
+                <>
+                  <Text x={h + 0.8} y={k + c} size={11} color="#dc2626">
+                    F({h.toFixed(1)}, {(k + c).toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k - c} size={11} color="#dc2626">
+                    F({h.toFixed(1)}, {(k - c).toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           )
         ) : null}
 
-        {/* Vértices */}
+        {/* Vértices Mayores y Menores */}
         {toggles?.vertices ?? true ? (
           puntos.eje === 'horizontal' ? (
             <>
+              {/* Eje Mayor */}
               <Point x={h + a} y={k} color="#0ea5e9" />
               <Point x={h - a} y={k} color="#0ea5e9" />
+              {/* Eje Menor */}
+              <Point x={h} y={k + b} color="#0ea5e9" />
+              <Point x={h} y={k - b} color="#0ea5e9" />
+              
+              {!modoDefensa && (
+                <>
+                  <Text x={h + a} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h + a).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h - a} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h - a).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k + b} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k + b).toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k - b} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k - b).toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           ) : (
             <>
+              {/* Eje Mayor */}
               <Point x={h} y={k + a} color="#0ea5e9" />
               <Point x={h} y={k - a} color="#0ea5e9" />
+              {/* Eje Menor */}
+              <Point x={h + b} y={k} color="#0ea5e9" />
+              <Point x={h - b} y={k} color="#0ea5e9" />
+              
+              {!modoDefensa && (
+                <>
+                  <Text x={h + 0.8} y={k + a} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k + a).toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k - a} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k - a).toFixed(1)})
+                  </Text>
+                  <Text x={h + b} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h + b).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h - b} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h - b).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           )
         ) : null}
@@ -246,7 +307,16 @@ export function GraficaConica({ resultado, toggles }: Props) {
         />
 
         {/* Centro */}
-        {toggles?.points ?? true ? <Point x={h} y={k} color="#f97316" /> : null}
+        {toggles?.points ?? true ? (
+          <>
+            <Point x={h} y={k} color="#f97316" />
+            {!modoDefensa && (
+              <Text x={h - 1.5} y={k - 1} size={12} color="#f97316">
+                C({h.toFixed(1)}, {k.toFixed(1)})
+              </Text>
+            )}
+          </>
+        ) : null}
 
         {/* Focos */}
         {toggles?.foci ?? true ? (
@@ -254,11 +324,31 @@ export function GraficaConica({ resultado, toggles }: Props) {
             <>
               <Point x={h + c} y={k} color="#dc2626" />
               <Point x={h - c} y={k} color="#dc2626" />
+              {!modoDefensa && (
+                <>
+                  <Text x={h + c} y={k - 0.8} size={11} color="#dc2626">
+                    F({(h + c).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h - c} y={k - 0.8} size={11} color="#dc2626">
+                    F({(h - c).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           ) : (
             <>
               <Point x={h} y={k + c} color="#dc2626" />
               <Point x={h} y={k - c} color="#dc2626" />
+              {!modoDefensa && (
+                <>
+                  <Text x={h + 0.8} y={k + c} size={11} color="#dc2626">
+                    F({h.toFixed(1)}, {(k + c).toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k - c} size={11} color="#dc2626">
+                    F({h.toFixed(1)}, {(k - c).toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           )
         ) : null}
@@ -269,11 +359,31 @@ export function GraficaConica({ resultado, toggles }: Props) {
             <>
               <Point x={h + a} y={k} color="#0ea5e9" />
               <Point x={h - a} y={k} color="#0ea5e9" />
+              {!modoDefensa && (
+                <>
+                  <Text x={h + a} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h + a).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                  <Text x={h - a} y={k + 0.8} size={11} color="#0ea5e9">
+                    V({(h - a).toFixed(1)}, {k.toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           ) : (
             <>
               <Point x={h} y={k + a} color="#0ea5e9" />
               <Point x={h} y={k - a} color="#0ea5e9" />
+              {!modoDefensa && (
+                <>
+                  <Text x={h + 0.8} y={k + a} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k + a).toFixed(1)})
+                  </Text>
+                  <Text x={h + 0.8} y={k - a} size={11} color="#0ea5e9">
+                    V({h.toFixed(1)}, {(k - a).toFixed(1)})
+                  </Text>
+                </>
+              )}
             </>
           )
         ) : null}
@@ -341,9 +451,11 @@ export function GraficaConica({ resultado, toggles }: Props) {
         {toggles?.points ?? true ? (
           <>
             <Point x={h} y={k} color="#f97316" />
-            <Text x={h} y={k + 0.8} size={12} color="#f97316">
-              V({h.toFixed(1)}, {k.toFixed(1)})
-            </Text>
+            {!modoDefensa && (
+              <Text x={h} y={k + 0.8} size={12} color="#f97316">
+                V({h.toFixed(1)}, {k.toFixed(1)})
+              </Text>
+            )}
           </>
         ) : null}
 
@@ -351,9 +463,11 @@ export function GraficaConica({ resultado, toggles }: Props) {
         {toggles?.foci ?? true ? (
           <>
             <Point x={focoX} y={focoY} color="#dc2626" />
-            <Text x={focoX + 0.5} y={focoY + 0.8} size={11} color="#dc2626">
-              F({focoX.toFixed(1)}, {focoY.toFixed(1)})
-            </Text>
+            {!modoDefensa && (
+              <Text x={focoX + 0.5} y={focoY + 0.8} size={11} color="#dc2626">
+                F({focoX.toFixed(1)}, {focoY.toFixed(1)})
+              </Text>
+            )}
           </>
         ) : null}
       </>
@@ -392,31 +506,68 @@ export function GraficaConica({ resultado, toggles }: Props) {
             x: [limites.xMin, limites.xMax],
             y: [limites.yMin, limites.yMax]
           }}
-          preserveAspectRatio="contain"
+          preserveAspectRatio={true}
         >
           <Coordinates.Cartesian />
           {renderConica()}
         </Mafs>
       </div>
 
-      {/* Leyenda de colores */}
+      {/* Leyenda de colores dinámica */}
       <div className="grid grid-cols-2 gap-4 text-sm text-foreground">
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 rounded-full bg-primary"></span>
-          <span>Centro/Vértice</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 rounded-full bg-destructive"></span>
-          <span>Focos</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 rounded-full bg-success"></span>
-          <span>Vértices</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-4 border-2 border-muted-foreground" style={{ borderStyle: 'dashed' }}></span>
-          <span>Asíntotas / Directriz</span>
-        </div>
+        {tipo === 'circunferencia' && (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-[#f97316]"></span>
+              <span>Centro</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-[#2563eb]"></span>
+              <span>Línea Circunferencia</span>
+            </div>
+          </>
+        )}
+        
+        {(tipo === 'elipse' || tipo === 'hiperbola') && (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-[#f97316]"></span>
+              <span>Centro</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-destructive"></span>
+              <span>Focos</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-[#0ea5e9]"></span>
+              <span>Vértices</span>
+            </div>
+          </>
+        )}
+
+        {tipo === 'hiperbola' && (
+          <div className="flex items-center gap-2">
+            <span className="h-4 w-4 border-2 border-muted-foreground" style={{ borderStyle: 'dashed' }}></span>
+            <span>Asíntotas</span>
+          </div>
+        )}
+
+        {tipo === 'parabola' && (
+          <>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-[#f97316]"></span>
+              <span>Vértice</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 rounded-full bg-destructive"></span>
+              <span>Foco</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="h-4 w-4 border-2 border-muted-foreground" style={{ borderStyle: 'dashed' }}></span>
+              <span>Directriz</span>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

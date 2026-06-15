@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { GraficaConica } from '@/components/GraficaConica';
 import { ConicaResult } from '@/lib/clasificarConica';
-import { InputsPedagogicosConica } from './InputsPedagogicosConica';
 
 interface Props {
   resultado: ConicaResult | null;
@@ -19,10 +18,10 @@ export function PanelGraficaConicas({ resultado }: Props) {
   ];
 
   const [toggleStates, setToggleStates] = useState<Record<string, boolean>>(Object.fromEntries(graphToggles.map(t => [t.id, t.defaultChecked])));
-  const [modoDefensa, setModoDefensa] = useState(false);
+  const [modoDefensa, setModoDefensa] = useState(true);
 
   return (
-    <section className="rounded-2xl border border-border bg-card p-5 shadow-sm lg:sticky lg:top-6">
+    <section className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:sticky lg:top-6 flex flex-col">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Visualización</p>
@@ -48,25 +47,23 @@ export function PanelGraficaConicas({ resultado }: Props) {
 
       {resultado ? (
         <>
-          {/* Si estado Defensa está activo, ocultar la gráfica real o mostrar inputs, según convención puede controlarse para la gráfica, pero por tarea 2.7 indica 'ocultar resultados calculados automáticos' */}
-          <div className={modoDefensa ? 'opacity-30 pointer-events-none transition-opacity' : 'transition-opacity'}>
-            <GraficaConica resultado={resultado} toggles={toggleStates} />
+          <div className="transition-opacity">
+            <GraficaConica resultado={resultado} toggles={toggleStates} modoDefensa={modoDefensa} />
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-4 pt-2 border-t border-border/50">
             {graphToggles.map(toggle => (
-              <label key={toggle.id} className="flex items-center gap-2 text-sm">
+              <label key={toggle.id} className="flex items-center gap-2 text-sm cursor-pointer hover:text-primary transition-colors">
                 <input
                   type="checkbox"
                   checked={!!toggleStates[toggle.id]}
                   onChange={(e) => setToggleStates(prev => ({ ...prev, [toggle.id]: e.target.checked }))}
+                  className="accent-primary"
                 />
-                <span className="text-muted-foreground">{toggle.label}</span>
+                <span className="text-muted-foreground font-medium">{toggle.label}</span>
               </label>
             ))}
           </div>
-
-          <InputsPedagogicosConica resultado={resultado} />
         </>
       ) : (
         <div className="flex aspect-square items-center justify-center rounded-2xl border border-dashed border-border bg-muted text-center text-sm text-muted-foreground">
