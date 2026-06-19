@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar } from './SidebarContext';
+import { X } from 'lucide-react';
 
 const items = [
   { label: 'Secciones Cónicas', href: '/conicas', mark: 'C' },
@@ -11,27 +12,50 @@ const items = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { isSidebarCollapsed } = useSidebar();
+  const { isSidebarCollapsed, toggleSidebar } = useSidebar();
 
   return (
-    <aside 
-      className={`hidden shrink-0 border-r border-border bg-card transition-all duration-300 lg:flex lg:flex-col ${
-        isSidebarCollapsed ? 'w-20' : 'w-72'
-      }`}
-    >
-      <div className={`border-b border-border p-6 ${isSidebarCollapsed ? 'flex justify-center px-0' : ''}`}>
-        <div className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
-          <div className="flex shrink-0 h-11 w-11 items-center justify-center rounded-[14px] bg-primary text-primary-foreground shadow-[0_8px_24px_rgba(37,99,235,0.18)]">
-            <span className="text-lg font-bold">M</span>
-          </div>
-          {!isSidebarCollapsed && (
-            <div className="overflow-hidden whitespace-nowrap">
-              <p className="text-sm font-semibold text-foreground">MathRUT</p>
-              <p className="text-sm text-muted-foreground">Cálculo I</p>
+    <>
+      {/* Backdrop para móviles */}
+      {!isSidebarCollapsed && (
+        <div 
+          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          onClick={toggleSidebar}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside 
+        className={`fixed inset-y-0 left-0 z-50 shrink-0 border-r border-border bg-card transition-all duration-300 flex flex-col lg:static lg:z-auto lg:translate-x-0 ${
+          isSidebarCollapsed 
+            ? '-translate-x-full lg:w-20' 
+            : 'translate-x-0 w-72'
+        }`}
+      >
+        <div className={`relative border-b border-border p-6 ${isSidebarCollapsed ? 'flex justify-center px-0' : ''}`}>
+          <div className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'gap-3'}`}>
+            <div className="flex shrink-0 h-11 w-11 items-center justify-center rounded-[14px] bg-primary text-primary-foreground shadow-[0_8px_24px_rgba(37,99,235,0.18)]">
+              <span className="text-lg font-bold">M</span>
             </div>
+            {!isSidebarCollapsed && (
+              <div className="overflow-hidden whitespace-nowrap">
+                <p className="text-sm font-semibold text-foreground">MathRUT</p>
+                <p className="text-sm text-muted-foreground">Cálculo I</p>
+              </div>
+            )}
+          </div>
+
+          {/* Botón de cerrar solo en móvil */}
+          {!isSidebarCollapsed && (
+            <button 
+              onClick={toggleSidebar}
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground lg:hidden"
+              aria-label="Cerrar menú"
+            >
+              <X className="h-5 w-5" />
+            </button>
           )}
         </div>
-      </div>
 
       <nav className={`flex-1 space-y-2 p-4 ${isSidebarCollapsed ? 'px-2' : ''}`}>
         {!isSidebarCollapsed && (
@@ -86,5 +110,6 @@ export function AppSidebar() {
         )}
       </div>
     </aside>
+    </>
   );
 }
