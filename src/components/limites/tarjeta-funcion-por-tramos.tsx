@@ -23,16 +23,10 @@ export function TarjetaFuncionPorTramos() {
     );
   }
 
-  const { a, coeficientes } = resultado;
-  const { a1, a2, b1, m, n } = coeficientes;
+  const { a, formulaIzquierda, formulaDerecha } = resultado;
 
-  // Construir tramo 1: a1 x^2 + a2 x - b1 (Note that in TareasLimites.md it says - b1, so coefficient is + b1 but formula is - b1)
-  // Wait, if it's - b1, then the sign logic should just treat the term as negative or we just use formatearTermino with -b1.
-  // Let's use formatearTermino
-  const tramo1 = `${formatearTermino(a1, 'x²', true)}${formatearTermino(a2, 'x')}${formatearTermino(-b1, '')}`.trim() || '0';
-  
-  // Construir tramo 2: m x + n
-  const tramo2 = `${formatearTermino(m, 'x', true)}${formatearTermino(n, '')}`.trim() || '0';
+  const tramo1 = formulaIzquierda || '0';
+  const tramo2 = formulaDerecha || '0';
 
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden">

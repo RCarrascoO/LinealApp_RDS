@@ -11,17 +11,31 @@ function buildPoints(
   a2: number,
   b1: number,
   m: number,
-  n: number
+  n: number,
+  tipoDiscontinuidad: string
 ) {
-  const f1 = (x: number) => a1 * x * x + a2 * x - b1;
-  const f2 = (x: number) => m * x + n;
+  let f1: (x: number) => number;
+  let f2: (x: number) => number;
+
+  if (tipoDiscontinuidad === 'removible') {
+    f1 = (x: number) => x === a ? NaN : x + a1;
+    f2 = f1;
+  } else if (tipoDiscontinuidad === 'salto') {
+    f1 = (x: number) => a1 * x - b1;
+    f2 = (x: number) => m * x + n;
+  } else if (tipoDiscontinuidad === 'infinita') {
+    const numerador = n + 1;
+    f1 = (x: number) => numerador / (x - a);
+    f2 = f1;
+  } else {
+    // fallback
+    f1 = (x: number) => a1 * x * x + a2 * x - b1;
+    f2 = (x: number) => m * x + n;
+  }
 
   const leftPts: { x: number; y: number }[] = [];
   const rightPts: { x: number; y: number }[] = [];
 
-  // Use integer steps to avoid floating-point drift that caused leftPts to be
-  // empty: instead of accumulating xi += 0.1 (which drifts), compute each xi
-  // from scratch using an integer index so the split at `a` is always exact.
   const STEPS = 60; // covers [a-3, a+3] in 0.1 increments → 60 intervals
   for (let i = 0; i <= STEPS; i++) {
     const xi = Math.round((a - 3 + i * 0.1) * 1e9) / 1e9;
@@ -65,8 +79,11 @@ function pointsToPolyline(
   pad: number
 ) {
   return pts
+    .filter(p => Number.isFinite(p.y))
     .map(({ x, y }) => {
-      const { sx, sy } = toSVG(x, y, xMin, xMax, yMin, yMax, svgW, svgH, pad);
+      // Clamp Y strongly so it doesn't break SVG viewBox if asymptotic
+      const clampedY = Math.max(yMin - 100, Math.min(yMax + 100, y));
+      const { sx, sy } = toSVG(x, clampedY, xMin, xMax, yMin, yMax, svgW, svgH, pad);
       return `${sx},${sy}`;
     })
     .join(' ');
@@ -87,11 +104,26 @@ export function GraficoFuncionLimites() {
     const { a, coeficientes, limIzquierda, limDerecha, tipoDiscontinuidad } = resultado;
     const { a1, a2, b1, m, n } = coeficientes;
 
-    const { leftPts, rightPts } = buildPoints(a, a1, a2, b1, m, n);
+    const { leftPts, rightPts } = buildPoints(a, a1, a2, b1, m, n, tipoDiscontinuidad);
 
-    const allY = [...leftPts, ...rightPts].map((p) => p.y);
-    const rawYMin = Math.min(...allY, limIzquierda, limDerecha);
-    const rawYMax = Math.max(...allY, limIzquierda, limDerecha);
+    // Limit Y range heavily if it's infinita to avoid zooming out completely
+    let allY = [...leftPts, ...rightPts].map((p) => p.y).filter(Number.isFinite);
+    if (tipoDiscontinuidad === 'infinita') {
+       allY = allY.filter(y => y > -200 && y < 200); // Exclude extreme asymptotes from bounding box
+    }
+
+    const validLimI = Number.isFinite(limIzquierda) ? limIzquierda : null;
+    const validLimD = Number.isFinite(limDerecha) ? limDerecha : null;
+    
+    if (validLimI !== null) allY.push(validLimI);
+    if (validLimD !== null) allY.push(validLimD);
+
+    if (allY.length === 0) {
+      allY = [-10, 10];
+    }
+
+    const rawYMin = Math.min(...allY);
+    const rawYMax = Math.max(...allY);
     const yPad = Math.max((rawYMax - rawYMin) * 0.15, 1);
 
     return {
@@ -311,32 +343,32 @@ export function GraficoFuncionLimites() {
           {/* ── Limit points ── */}
           {isContinua ? (
             // Both filled green
-            <circle cx={leftPt.sx} cy={leftPt.sy} r={6} fill="hsl(142 71% 45%)" stroke="white" strokeWidth={2} />
+            Number.isFinite(limIzquierda) && <circle cx={leftPt.sx} cy={leftPt.sy} r={6} fill="hsl(142 71% 45%)" stroke="white" strokeWidth={2} />
           ) : (
             <>
               {/* Left limit: open circle */}
-              <circle
+              {Number.isFinite(limIzquierda) && <circle
                 cx={leftPt.sx}
                 cy={leftPt.sy}
                 r={6}
                 fill="var(--card)"
                 stroke="var(--primary)"
                 strokeWidth={2.5}
-              />
+              />}
               {/* Right limit: filled */}
-              <circle
+              {Number.isFinite(limDerecha) && <circle
                 cx={rightPt.sx}
                 cy={rightPt.sy}
                 r={6}
                 fill="oklch(0.6 0.18 280)"
                 stroke="white"
                 strokeWidth={2}
-              />
+              />}
             </>
           )}
 
           {/* ── Limit value labels near points ── */}
-          {!modoDefensa && (
+          {!modoDefensa && Number.isFinite(limIzquierda) && (
             <text
               x={leftPt.sx - 10}
               y={leftPt.sy - 10}
@@ -347,7 +379,7 @@ export function GraficoFuncionLimites() {
               {limIzquierda.toFixed(2)}
             </text>
           )}
-          {!isContinua && !modoDefensa && (
+          {!isContinua && !modoDefensa && Number.isFinite(limDerecha) && (
             <text
               x={rightPt.sx + 10}
               y={rightPt.sy - 10}

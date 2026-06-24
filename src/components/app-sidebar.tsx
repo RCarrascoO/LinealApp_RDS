@@ -19,17 +19,17 @@ export function AppSidebar() {
       {/* Backdrop para móviles */}
       {!isSidebarCollapsed && (
         <div 
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          className="fixed inset-x-0 bottom-0 top-14 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
           onClick={toggleSidebar}
           aria-hidden="true"
         />
       )}
 
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 shrink-0 border-r border-border bg-card transition-all duration-300 flex flex-col lg:static lg:z-auto lg:translate-x-0 ${
+        className={`fixed top-14 bottom-0 left-0 z-50 shrink-0 border-r border-border bg-card transition-all duration-300 flex flex-col lg:static lg:z-auto lg:translate-x-0 ${
           isSidebarCollapsed 
             ? '-translate-x-full lg:w-20' 
-            : 'translate-x-0 w-72'
+            : 'translate-x-0 w-[85vw] sm:w-72'
         }`}
       >
         <div className={`relative border-b border-border p-6 ${isSidebarCollapsed ? 'flex justify-center px-0' : ''}`}>
@@ -57,7 +57,7 @@ export function AppSidebar() {
           )}
         </div>
 
-      <nav className={`flex-1 space-y-2 p-4 ${isSidebarCollapsed ? 'px-2' : ''}`}>
+      <nav className={`flex-1 overflow-y-auto overflow-x-hidden space-y-2 p-4 ${isSidebarCollapsed ? 'px-2' : ''}`}>
         {!isSidebarCollapsed && (
           <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground whitespace-nowrap overflow-hidden">
             Vistas

@@ -42,6 +42,7 @@ export function RutForm({ onValidated, onContinue, onClear, textContinue }: RutF
     setEsValido(null);
     setDetallesAlgoritmo(null);
     setError('');
+    if (onClear) onClear();
   };
 
   const handleClear = () => {
