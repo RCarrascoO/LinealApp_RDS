@@ -45,10 +45,16 @@ export function ModoDefensaLimites() {
   const [allCorrect, setAllCorrect] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
 
-  // Pre-fill the form when resultado changes
+  // Don't auto-fill on new analysis, start empty for defense mode
   useEffect(() => {
     if (resultado) {
-      setForm(getExpectedValues(resultado));
+      setForm({
+        limIzq: '',
+        limDer: '',
+        existeLimite: 'no',
+        tipoDisc: 'salto',
+        justificacion: '',
+      });
       setValidated(false);
       setAllCorrect(false);
       setErrors({});
@@ -118,7 +124,7 @@ export function ModoDefensaLimites() {
 
       <p className="text-sm text-muted-foreground">
         {resultado
-          ? 'Los campos están pre-llenados con los valores calculados. Edítalos para practicar y luego usa "Preparar defensa" para verificar.'
+          ? 'Los campos están vacíos para que los llenes en tu defensa oral. Complétalos y usa "Preparar defensa" para verificar.'
           : 'Completa los datos clave para explicar el análisis del límite con claridad durante la defensa.'}
       </p>
 

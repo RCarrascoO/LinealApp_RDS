@@ -48,6 +48,9 @@ function PaginaLimitesContenido() {
           {/* 3. Gráfico de la función por tramos (Persona 3) */}
           <GraficoFuncionLimites />
 
+          {/* 6. Modo defensa (Persona 3) */}
+          <ModoDefensaLimites />
+
           {/* 4. Grilla 2 columnas (Persona 2) */}
           <div className="grid gap-6 lg:grid-cols-2">
             <PanelTipoDiscontinuidad />
@@ -56,9 +59,6 @@ function PaginaLimitesContenido() {
 
           {/* 5. Tabla numérica (Persona 3) */}
           <TablaEvidenciaNumerica />
-
-          {/* 6. Modo defensa (Persona 3) */}
-          <ModoDefensaLimites />
         </div>
       )}
     </main>

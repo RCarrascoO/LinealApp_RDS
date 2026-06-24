@@ -80,6 +80,7 @@ const PAD = 48;
 
 export function GraficoFuncionLimites() {
   const { resultado } = useLimitesContext();
+  const [modoDefensa, setModoDefensa] = React.useState(true);
 
   const data = useMemo(() => {
     if (!resultado) return null;
@@ -150,12 +151,25 @@ export function GraficoFuncionLimites() {
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex flex-col gap-2">
-        <h3 className="text-lg font-semibold text-foreground">Gráfico de la Función por Tramos</h3>
-        <p className="text-sm text-muted-foreground">
-          Visualización de ambos tramos con el punto crítico{' '}
-          <span className="font-mono font-semibold text-primary">x = {a}</span> marcado.
-        </p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold text-foreground">Gráfico de la Función por Tramos</h3>
+          <p className="text-sm text-muted-foreground">
+            Visualización de ambos tramos con el punto crítico{' '}
+            <span className="font-mono font-semibold text-primary">x = {a}</span> marcado.
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-3 sm:flex-row sm:items-center">
+          <label className="flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-1.5 text-sm cursor-pointer hover:bg-primary/10 transition-colors">
+            <input 
+              type="checkbox" 
+              checked={modoDefensa}
+              onChange={(e) => setModoDefensa(e.target.checked)}
+              className="accent-primary"
+            />
+            <span className="font-medium text-primary">Modo Defensa</span>
+          </label>
+        </div>
       </div>
 
       {/* SVG Graph */}
@@ -212,22 +226,24 @@ export function GraficoFuncionLimites() {
             return (
               <g key={`xtick-${xv}`}>
                 <line x1={sx} y1={axisY0 - 3} x2={sx} y2={axisY0 + 3} stroke="currentColor" strokeOpacity={0.3} />
-                <text
-                  x={sx}
-                  y={axisY0 + 14}
-                  textAnchor="middle"
-                  fontSize={9}
-                  fill="currentColor"
-                  fillOpacity={0.5}
-                >
-                  {Number(xv.toFixed(2))}
-                </text>
+                {!modoDefensa && (
+                  <text
+                    x={sx}
+                    y={axisY0 + 14}
+                    textAnchor="middle"
+                    fontSize={9}
+                    fill="currentColor"
+                    fillOpacity={0.5}
+                  >
+                    {Number(xv.toFixed(2))}
+                  </text>
+                )}
               </g>
             );
           })}
 
           {/* ── Y-axis tick labels ── */}
-          {yTicks.map((yv) => {
+          {!modoDefensa && yTicks.map((yv) => {
             const { sy } = toSVG(0, yv, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
             return (
               <text
@@ -255,15 +271,17 @@ export function GraficoFuncionLimites() {
             strokeWidth={1.5}
             strokeDasharray="5,4"
           />
-          <text
-            x={critX + 4}
-            y={PAD + 12}
-            fontSize={9}
-            fill="var(--primary)"
-            fillOpacity={0.8}
-          >
-            x = {a}
-          </text>
+          {!modoDefensa && (
+            <text
+              x={critX + 4}
+              y={PAD + 12}
+              fontSize={9}
+              fill="var(--primary)"
+              fillOpacity={0.8}
+            >
+              x = {a}
+            </text>
+          )}
 
           {/* ── Tramo 1 (f1, x < a) — blue ── */}
           {leftPts.length > 1 && (
@@ -318,16 +336,18 @@ export function GraficoFuncionLimites() {
           )}
 
           {/* ── Limit value labels near points ── */}
-          <text
-            x={leftPt.sx - 10}
-            y={leftPt.sy - 10}
-            fontSize={9}
-            fill="var(--primary)"
-            textAnchor="middle"
-          >
-            {limIzquierda.toFixed(2)}
-          </text>
-          {!isContinua && (
+          {!modoDefensa && (
+            <text
+              x={leftPt.sx - 10}
+              y={leftPt.sy - 10}
+              fontSize={9}
+              fill="var(--primary)"
+              textAnchor="middle"
+            >
+              {limIzquierda.toFixed(2)}
+            </text>
+          )}
+          {!isContinua && !modoDefensa && (
             <text
               x={rightPt.sx + 10}
               y={rightPt.sy - 10}
