@@ -13,9 +13,12 @@ interface Props {
   coeficientes: CoeficientesConica | null;
   resultado: ConicaResult | null;
   digitos: number[] | null;
+  onCambiarConica?: (tipo: string) => void;
+  colisionReglas?: boolean;
+  reglasDescartadas?: string[];
 }
 
-export function PanelEntradaConicas({ estadoFlujo, onAnalyze, onClear, coeficientes, resultado, digitos }: Props) {
+export function PanelEntradaConicas({ estadoFlujo, onAnalyze, onClear, coeficientes, resultado, digitos, onCambiarConica, colisionReglas, reglasDescartadas }: Props) {
   const [rutValido, setRutValido] = useState('');
 
   return (
@@ -84,20 +87,35 @@ export function PanelEntradaConicas({ estadoFlujo, onAnalyze, onClear, coeficien
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {['circunferencia', 'elipse', 'hipérbola', 'parábola'].map((type) => {
               const isActive = resultado.tipo === type.replace('ó', 'o').replace('á', 'a');
+              const isAvailable = isActive || (colisionReglas && reglasDescartadas?.includes(type));
               
               return (
                 <div 
                   key={type}
+                  onClick={() => {
+                    if (isAvailable && !isActive && onCambiarConica) {
+                      onCambiarConica(type);
+                    }
+                  }}
                   className={`relative p-4 rounded-xl border-2 transition-all ${
                     isActive 
-                      ? 'border-primary/50 bg-primary/5 shadow-md shadow-none' 
-                      : 'border-border/50 bg-card opacity-50 grayscale-[50%]'
+                      ? 'border-primary/50 bg-primary/5 shadow-md shadow-none cursor-default' 
+                      : isAvailable
+                        ? 'border-primary/30 bg-card cursor-pointer hover:border-primary/50 hover:bg-primary/5'
+                        : 'border-border/50 bg-card opacity-50 grayscale-[50%] cursor-not-allowed'
                   }`}
                 >
                   {isActive && (
                     <div className="absolute -top-2.5 -right-2.5">
                       <span className="flex items-center gap-1 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-sm">
                         <CheckCircle2 className="w-3 h-3" /> Detectada
+                      </span>
+                    </div>
+                  )}
+                  {!isActive && isAvailable && (
+                    <div className="absolute -top-2.5 -right-2.5 animate-pulse">
+                      <span className="flex items-center gap-1 bg-warning text-warning-foreground text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-sm">
+                        <IterationCcw className="w-3 h-3" /> Cambiar
                       </span>
                     </div>
                   )}

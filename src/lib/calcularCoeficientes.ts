@@ -46,7 +46,7 @@ function calcularV(dv: string): number {
   return Number(dv);
 }
 
-export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
+export function calcularCoeficientes(rut: string, forzarRegla?: string): ResultadoCoeficientes {
   const { digitos, dv, rutNormalizado } = extraerRut(rut);
   const v = calcularV(dv);
   const [d1, d2, d3, d4, d5, d6, d7, d8] = digitos;
@@ -86,8 +86,21 @@ export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
 
   const reglasDescartadas: string[] = [];
 
-  // JERARQUÍA ESTRICTA
-  if (esParabola) {
+  let reglaAAplicar = '';
+  if (forzarRegla) {
+    if (forzarRegla === 'parábola' && esParabola) reglaAAplicar = 'parábola';
+    else if (forzarRegla === 'circunferencia' && esCirculo) reglaAAplicar = 'circunferencia';
+    else if (forzarRegla === 'hipérbola' && esHiperbola) reglaAAplicar = 'hipérbola';
+  }
+  
+  if (!reglaAAplicar) {
+    if (esParabola) reglaAAplicar = 'parábola';
+    else if (esCirculo) reglaAAplicar = 'circunferencia';
+    else if (esHiperbola) reglaAAplicar = 'hipérbola';
+  }
+
+  // JERARQUÍA ESTRICTA O FORZADA
+  if (reglaAAplicar === 'parábola') {
     pasos.push(`Regla 1 (Parábola): d5 + d6 = ${d5 + d6} es múltiplo de 3.`);
     if (d7 % 2 === 0) {
       B = 0;
@@ -97,23 +110,36 @@ export function calcularCoeficientes(rut: string): ResultadoCoeficientes {
       pasos.push(`Regla 1.1: d7 = ${d7} es impar, entonces A = 0.`);
     }
     
-    if (esCirculo) reglasDescartadas.push('Circunferencia');
-    if (esHiperbola) reglasDescartadas.push('Hipérbola');
+    if (esCirculo) reglasDescartadas.push('circunferencia');
+    if (esHiperbola) reglasDescartadas.push('hipérbola');
     
-    if (esCirculo || esHiperbola) {
+    if (colisionReglas && !forzarRegla) {
        pasos.push(`Las reglas de Circunferencia y/o Hipérbola fueron omitidas por jerarquía para no destruir la Parábola.`);
+    } else if (forzarRegla) {
+       pasos.push(`Regla forzada manualmente por el usuario.`);
     }
-  } else if (esCirculo) {
+  } else if (reglaAAplicar === 'circunferencia') {
     B = A;
     pasos.push(`Regla 2 (Circunferencia): d1 === d2, entonces B = A → ${B}`);
     
-    if (esHiperbola) {
-       reglasDescartadas.push('Hipérbola');
+    if (esParabola) reglasDescartadas.push('parábola');
+    if (esHiperbola) reglasDescartadas.push('hipérbola');
+    
+    if (colisionReglas && !forzarRegla) {
        pasos.push(`La regla de Hipérbola fue omitida por jerarquía para no destruir la Circunferencia (evitar que B=-A).`);
+    } else if (forzarRegla) {
+       pasos.push(`Regla forzada manualmente por el usuario.`);
     }
-  } else if (esHiperbola) {
+  } else if (reglaAAplicar === 'hipérbola') {
     B = -B;
     pasos.push(`Regla 3 (Hipérbola): d8 = ${d8} es impar, entonces B = -B → ${B}`);
+
+    if (esParabola) reglasDescartadas.push('parábola');
+    if (esCirculo) reglasDescartadas.push('circunferencia');
+
+    if (forzarRegla) {
+       pasos.push(`Regla forzada manualmente por el usuario.`);
+    }
   } else {
     pasos.push(`No se activaron reglas de modificación de coeficientes A y B.`);
   }
