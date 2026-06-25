@@ -2,13 +2,27 @@
 
 import React from 'react';
 import { useLimitesContext } from './LimitesContext';
+import type { FormulaTramo } from '../../lib/limites';
 
-function formatearTermino(coef: number, variable: string, isFirst: boolean = false): string {
-  if (coef === 0) return '';
-  const absCoef = Math.abs(coef);
-  const sign = coef < 0 ? (isFirst ? '-' : ' - ') : (isFirst ? '' : ' + ');
-  const numStr = absCoef === 1 && variable !== '' ? '' : absCoef.toString();
-  return `${sign}${numStr}${variable}`;
+/**
+ * Renderiza una FormulaTramo como JSX:
+ * - tipo 'fraccion': muestra numerador sobre denominador con línea divisoria
+ * - tipo 'lineal': muestra la expresión en texto monoespaciado
+ */
+function RenderFormula({ formula }: { formula: FormulaTramo }) {
+  if (formula.tipo === 'fraccion') {
+    return (
+      <span className="inline-flex flex-col items-center align-middle mx-1 leading-none">
+        <span className="border-b border-current pb-0.5 px-1 text-sm sm:text-base">
+          {formula.numerador}
+        </span>
+        <span className="pt-0.5 px-1 text-sm sm:text-base">
+          {formula.denominador}
+        </span>
+      </span>
+    );
+  }
+  return <span>{formula.expresion}</span>;
 }
 
 export function TarjetaFuncionPorTramos() {
@@ -24,9 +38,6 @@ export function TarjetaFuncionPorTramos() {
   }
 
   const { a, formulaIzquierda, formulaDerecha } = resultado;
-
-  const tramo1 = formulaIzquierda || '0';
-  const tramo2 = formulaDerecha || '0';
 
   return (
     <div className="flex flex-col rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden">
@@ -47,12 +58,14 @@ export function TarjetaFuncionPorTramos() {
           <div className="text-4xl sm:text-5xl md:text-6xl font-light leading-none mr-2 sm:mr-4 text-muted-foreground">
             {'{'}
           </div>
-          <div className="flex flex-col gap-2 sm:gap-3 whitespace-nowrap">
-            <div>
-              {tramo1} <span className="text-muted-foreground ml-2 sm:ml-4">, si x &lt; {a}</span>
+          <div className="flex flex-col gap-4 sm:gap-5">
+            <div className="flex items-center">
+              <RenderFormula formula={formulaIzquierda} />
+              <span className="text-muted-foreground ml-2 sm:ml-4 whitespace-nowrap text-sm">, si x &lt; {a}</span>
             </div>
-            <div>
-              {tramo2} <span className="text-muted-foreground ml-2 sm:ml-4">, si x ≥ {a}</span>
+            <div className="flex items-center">
+              <RenderFormula formula={formulaDerecha} />
+              <span className="text-muted-foreground ml-2 sm:ml-4 whitespace-nowrap text-sm">, si x ≥ {a}</span>
             </div>
           </div>
         </div>

@@ -1,3 +1,7 @@
+export type FormulaTramo =
+  | { tipo: 'fraccion'; numerador: string; denominador: string }
+  | { tipo: 'lineal'; expresion: string };
+
 export type ResultadoLimites = {
   a: number;
   coeficientes: { a1: number; a2: number; b1: number; m: number; n: number };
@@ -8,8 +12,8 @@ export type ResultadoLimites = {
   evidenciaIzquierda: { x: string; fx: string; observacion: string }[];
   evidenciaDerecha: { x: string; fx: string; observacion: string }[];
   justificacion: string;
-  formulaIzquierda: string;
-  formulaDerecha: string;
+  formulaIzquierda: FormulaTramo;
+  formulaDerecha: FormulaTramo;
 };
 
 export function calcularLimites(digitos: number[], v: number): ResultadoLimites {
@@ -41,8 +45,6 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
   let f2: (x: number) => number;
   let limIzquierda: number;
   let limDerecha: number;
-  let formulaIzquierda = '';
-  let formulaDerecha = '';
 
   const formT = (coef: number, variable: string, isFirst: boolean = false) => {
     if (coef === 0) return '';
@@ -52,16 +54,21 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
     return `${sign}${numStr}${variable}`;
   };
 
+  let formulaIzquierda: FormulaTramo;
+  let formulaDerecha: FormulaTramo;
+
   if (tipoDiscontinuidad === 'removible') {
     // f(x) = (x-a)(x+a1)/(x-a)
     f1 = (x: number) => x === a ? NaN : x + a1;
     f2 = f1;
     limIzquierda = a + a1;
     limDerecha = a + a1;
-    
+
     const signoA = a < 0 ? `+ ${Math.abs(a)}` : `- ${a}`;
     const signoA1 = a1 < 0 ? `- ${Math.abs(a1)}` : `+ ${a1}`;
-    formulaIzquierda = `\\frac{(x ${signoA})(x ${signoA1})}{(x ${signoA})}`;
+    const numStr = `(x ${signoA})(x ${signoA1})`;
+    const denStr = `(x ${signoA})`;
+    formulaIzquierda = { tipo: 'fraccion', numerador: numStr, denominador: denStr };
     formulaDerecha = formulaIzquierda;
   } else if (tipoDiscontinuidad === 'salto') {
     // Dos rectas: f1(x) = a1*x - b1, f2(x) = m*x + n
@@ -69,9 +76,11 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
     f2 = (x: number) => m * x + n;
     limIzquierda = a1 * a - b1;
     limDerecha = m * a + n;
-    
-    formulaIzquierda = `${formT(a1, 'x', true)}${formT(-b1, '')}`.trim() || '0';
-    formulaDerecha = `${formT(m, 'x', true)}${formT(n, '')}`.trim() || '0';
+
+    const expr1 = `${formT(a1, 'x', true)}${formT(-b1, '')}`.trim() || '0';
+    const expr2 = `${formT(m, 'x', true)}${formT(n, '')}`.trim() || '0';
+    formulaIzquierda = { tipo: 'lineal', expresion: expr1 };
+    formulaDerecha = { tipo: 'lineal', expresion: expr2 };
   } else {
     // Infinita: f(x) = (n+1)/(x-a)
     const numerador = n + 1;
@@ -79,9 +88,9 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
     f2 = f1;
     limIzquierda = numerador > 0 ? -Infinity : Infinity;
     limDerecha = numerador > 0 ? Infinity : -Infinity;
-    
+
     const signoA = a < 0 ? `+ ${Math.abs(a)}` : `- ${a}`;
-    formulaIzquierda = `\\frac{${numerador}}{x ${signoA}}`;
+    formulaIzquierda = { tipo: 'fraccion', numerador: String(numerador), denominador: `x ${signoA}` };
     formulaDerecha = formulaIzquierda;
   }
 
