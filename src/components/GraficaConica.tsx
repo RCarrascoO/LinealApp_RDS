@@ -219,10 +219,12 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
     const a = formaCanonica.a ?? 3;
     const b = formaCanonica.b ?? 2;
     const c = raizCuadrada(a * a + b * b);
-    const puntos = puntosHiperbola(h, k, a, b, formaCanonica.eje === 'horizontal', 40, 0.1);
+    // Determinar orientación directamente desde formaCanonica para evitar closures obsoletos
+    const esHorizontal = formaCanonica.eje === 'horizontal';
 
-    // Asíntotas
-    const pendiente1 = puntos.eje === 'horizontal' ? b / a : a / b;
+    // Asíntotas: pendiente depende del eje
+    // Horizontal: y = ±(b/a)(x-h)+k  |  Vertical: y = ±(a/b)(x-h)+k
+    const pendiente1 = esHorizontal ? b / a : a / b;
     const pendiente2 = -pendiente1;
 
     return (
@@ -246,61 +248,46 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
         ) : null}
 
         {/* Ramas de la hipérbola */}
-        <Plot.OfX
-          y={(x) => {
-            if (puntos.eje !== 'horizontal') {
-              return Number.NaN;
-            }
-            const relativo = (x - h) / a;
-            const discriminante = relativo * relativo - 1;
-            if (discriminante < 0) return Number.NaN;
-            const raiz = raizCuadrada(discriminante);
-            return k + b * raiz;
-          }}
-          color="#2563eb"
-          opacity={0.8}
-        />
 
-        <Plot.OfX
-          y={(x) => {
-            if (puntos.eje !== 'horizontal') {
-              return Number.NaN;
-            }
-            const relativo = (x - h) / a;
-            const discriminante = relativo * relativo - 1;
-            if (discriminante < 0) return Number.NaN;
-            const raiz = raizCuadrada(discriminante);
-            return k - b * raiz;
-          }}
-          color="#2563eb"
-          opacity={0.8}
-        />
-
+        {/* --- HIPÉRBOLA HORIZONTAL: (x-h)²/a² - (y-k)²/b² = 1 --- */}
+        {/* Rama derecha: x = h + a·√(1 + (y-k)²/b²) */}
         <Plot.OfY
           x={(y) => {
-            if (puntos.eje !== 'vertical') {
-              return Number.NaN;
-            }
-            const relativo = (y - k) / a;
-            const discriminante = relativo * relativo - 1;
-            if (discriminante < 0) return Number.NaN;
-            const raiz = raizCuadrada(discriminante);
-            return h + b * raiz;
+            if (!esHorizontal) return Number.NaN;
+            const relativo = (y - k) / b;
+            return h + a * raizCuadrada(1 + relativo * relativo);
+          }}
+          color="#2563eb"
+          opacity={0.8}
+        />
+        {/* Rama izquierda: x = h - a·√(1 + (y-k)²/b²) */}
+        <Plot.OfY
+          x={(y) => {
+            if (!esHorizontal) return Number.NaN;
+            const relativo = (y - k) / b;
+            return h - a * raizCuadrada(1 + relativo * relativo);
           }}
           color="#2563eb"
           opacity={0.8}
         />
 
-        <Plot.OfY
-          x={(y) => {
-            if (puntos.eje !== 'vertical') {
-              return Number.NaN;
-            }
-            const relativo = (y - k) / a;
-            const discriminante = relativo * relativo - 1;
-            if (discriminante < 0) return Number.NaN;
-            const raiz = raizCuadrada(discriminante);
-            return h - b * raiz;
+        {/* --- HIPÉRBOLA VERTICAL: (y-k)²/a² - (x-h)²/b² = 1 --- */}
+        {/* Rama superior: y = k + a·√(1 + (x-h)²/b²) */}
+        <Plot.OfX
+          y={(x) => {
+            if (esHorizontal) return Number.NaN;
+            const relativo = (x - h) / b;
+            return k + a * raizCuadrada(1 + relativo * relativo);
+          }}
+          color="#2563eb"
+          opacity={0.8}
+        />
+        {/* Rama inferior: y = k - a·√(1 + (x-h)²/b²) */}
+        <Plot.OfX
+          y={(x) => {
+            if (esHorizontal) return Number.NaN;
+            const relativo = (x - h) / b;
+            return k - a * raizCuadrada(1 + relativo * relativo);
           }}
           color="#2563eb"
           opacity={0.8}
@@ -320,7 +307,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
 
         {/* Focos */}
         {toggles?.foci ?? true ? (
-          puntos.eje === 'horizontal' ? (
+          esHorizontal ? (
             <>
               <Point x={h + c} y={k} color="#dc2626" />
               <Point x={h - c} y={k} color="#dc2626" />
@@ -355,7 +342,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
 
         {/* Vértices */}
         {toggles?.vertices ?? true ? (
-          puntos.eje === 'horizontal' ? (
+          esHorizontal ? (
             <>
               <Point x={h + a} y={k} color="#0ea5e9" />
               <Point x={h - a} y={k} color="#0ea5e9" />
