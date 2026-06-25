@@ -45,7 +45,7 @@ export function ModoDefensaLimites() {
   const [allCorrect, setAllCorrect] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
 
-  // Don't auto-fill on new analysis, start empty for defense mode
+  // No autocompletar en un nuevo análisis, comenzar vacío para el modo defensa
   useEffect(() => {
     if (resultado) {
       setForm({
@@ -65,7 +65,7 @@ export function ModoDefensaLimites() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
-    // Clear error on edit
+    // Limpiar error al editar
     if (validated) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -77,7 +77,7 @@ export function ModoDefensaLimites() {
     const expected = getExpectedValues(resultado);
     const newErrors: ValidationErrors = {};
 
-    // Numeric comparison with tolerance for floats
+    // Comparación numérica con tolerancia para decimales
     const limIzqMatch = Math.abs(parseFloat(form.limIzq) - parseFloat(expected.limIzq)) < 0.0001;
     const limDerMatch = Math.abs(parseFloat(form.limDer) - parseFloat(expected.limDer)) < 0.0001;
 

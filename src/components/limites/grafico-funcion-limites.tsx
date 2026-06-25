@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { useLimitesContext } from './LimitesContext';
 
-// ─── Math helpers ─────────────────────────────────────────────────────────────
+// ─── Funciones auxiliares matemáticas ─────────────────────────────────────────
 
 function buildPoints(
   a: number,
@@ -28,7 +28,7 @@ function buildPoints(
     f1 = (x: number) => numerador / (x - a);
     f2 = f1;
   } else {
-    // fallback
+    // por defecto
     f1 = (x: number) => a1 * x * x + a2 * x - b1;
     f2 = (x: number) => m * x + n;
   }
@@ -48,7 +48,7 @@ function buildPoints(
   return { leftPts, rightPts, f1, f2 };
 }
 
-// ─── SVG coordinate helpers ───────────────────────────────────────────────────
+// ─── Auxiliares de coordenadas SVG ──────────────────────────────────────────
 
 function toSVG(
   x: number,
@@ -81,7 +81,7 @@ function pointsToPolyline(
   return pts
     .filter(p => Number.isFinite(p.y))
     .map(({ x, y }) => {
-      // Clamp Y strongly so it doesn't break SVG viewBox if asymptotic
+      // Limitar Y fuertemente para que no rompa el viewBox del SVG si es asintótica
       const clampedY = Math.max(yMin - 100, Math.min(yMax + 100, y));
       const { sx, sy } = toSVG(x, clampedY, xMin, xMax, yMin, yMax, svgW, svgH, pad);
       return `${sx},${sy}`;
@@ -89,7 +89,7 @@ function pointsToPolyline(
     .join(' ');
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Componente ───────────────────────────────────────────────────────────────
 
 const SVG_W = 600;
 const SVG_H = 300;
@@ -106,10 +106,10 @@ export function GraficoFuncionLimites() {
 
     const { leftPts, rightPts } = buildPoints(a, a1, a2, b1, m, n, tipoDiscontinuidad);
 
-    // Limit Y range heavily if it's infinita to avoid zooming out completely
+    // Limitar el rango Y fuertemente si es infinita para evitar perder el zoom
     let allY = [...leftPts, ...rightPts].map((p) => p.y).filter(Number.isFinite);
     if (tipoDiscontinuidad === 'infinita') {
-       allY = allY.filter(y => y > -200 && y < 200); // Exclude extreme asymptotes from bounding box
+       allY = allY.filter(y => y > -200 && y < 200); // Excluir asíntotas extremas del cuadro delimitador
     }
 
     const validLimI = Number.isFinite(limIzquierda) ? limIzquierda : null;
@@ -157,26 +157,26 @@ export function GraficoFuncionLimites() {
   const { a, leftPts, rightPts, limIzquierda, limDerecha, tipoDiscontinuidad, xMin, xMax, yMin, yMax } = data;
   const isContinua = tipoDiscontinuidad === 'continua';
 
-  // Convert function points to polyline strings
+  // Convertir los puntos de la función a cadenas para polyline
   const leftLine = pointsToPolyline(leftPts, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
   const rightLine = pointsToPolyline(rightPts, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
 
-  // Critical vertical line x = a
+  // Línea vertical crítica x = a
   const { sx: critX } = toSVG(a, 0, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
 
-  // X-axis (y = 0) — clamp if 0 not in range
+  // Eje X (y = 0) — limitar si 0 no está en el rango
   const axisY0 = yMin <= 0 && yMax >= 0
     ? toSVG(0, 0, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD).sy
     : SVG_H - PAD;
 
-  // Limit points
+  // Puntos de límite
   const leftPt = toSVG(a, limIzquierda, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
   const rightPt = toSVG(a, limDerecha, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
 
-  // X-axis tick labels
+  // Etiquetas del eje X
   const xTicks = [-3, -2, -1, 0, 1, 2, 3].map((d) => a + d);
 
-  // Y-axis tick labels (5 evenly spaced)
+  // Etiquetas del eje Y (5 espaciadas uniformemente)
   const yRange = yMax - yMin;
   const yStep = yRange / 4;
   const yTicks = [0, 1, 2, 3, 4].map((i) => yMin + i * yStep);
@@ -204,7 +204,7 @@ export function GraficoFuncionLimites() {
         </div>
       </div>
 
-      {/* SVG Graph */}
+      {/* Gráfico SVG */}
       <div className="w-full overflow-x-auto rounded-xl border border-border bg-muted/40 p-2">
         <svg
           viewBox={`0 0 ${SVG_W} ${SVG_H}`}
@@ -213,7 +213,7 @@ export function GraficoFuncionLimites() {
           style={{ height: 300 }}
           aria-label="Gráfico de la función por tramos"
         >
-          {/* ── Grid lines (light) ── */}
+          {/* ── Líneas de cuadrícula (claras) ── */}
           {yTicks.map((yv) => {
             const { sy } = toSVG(0, yv, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
             return (
@@ -230,7 +230,7 @@ export function GraficoFuncionLimites() {
             );
           })}
 
-          {/* ── X axis ── */}
+          {/* ── Eje X ── */}
           <line
             x1={PAD}
             y1={axisY0}
@@ -241,7 +241,7 @@ export function GraficoFuncionLimites() {
             strokeWidth={1.5}
           />
 
-          {/* ── Y axis (at x = xMin for simplicity, i.e., left edge) ── */}
+          {/* ── Eje Y (en x = xMin para simplicidad, i.e., borde izquierdo) ── */}
           <line
             x1={PAD}
             y1={PAD}
@@ -252,7 +252,7 @@ export function GraficoFuncionLimites() {
             strokeWidth={1.5}
           />
 
-          {/* ── X-axis tick labels ── */}
+          {/* ── Etiquetas del eje X ── */}
           {xTicks.map((xv) => {
             const { sx } = toSVG(xv, 0, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
             return (
@@ -274,7 +274,7 @@ export function GraficoFuncionLimites() {
             );
           })}
 
-          {/* ── Y-axis tick labels ── */}
+          {/* ── Etiquetas del eje Y ── */}
           {!modoDefensa && yTicks.map((yv) => {
             const { sy } = toSVG(0, yv, xMin, xMax, yMin, yMax, SVG_W, SVG_H, PAD);
             return (
@@ -292,7 +292,7 @@ export function GraficoFuncionLimites() {
             );
           })}
 
-          {/* ── Critical vertical dashed line ── */}
+          {/* ── Línea punteada vertical crítica ── */}
           <line
             x1={critX}
             y1={PAD}
@@ -315,7 +315,7 @@ export function GraficoFuncionLimites() {
             </text>
           )}
 
-          {/* ── Tramo 1 (f1, x < a) — blue ── */}
+          {/* ── Tramo 1 (f1, x < a) — azul ── */}
           {leftPts.length > 1 && (
             <polyline
               points={leftLine}
@@ -327,7 +327,7 @@ export function GraficoFuncionLimites() {
             />
           )}
 
-          {/* ── Tramo 2 (f2, x ≥ a) — violet/secondary ── */}
+          {/* ── Tramo 2 (f2, x ≥ a) — violeta/secundario ── */}
           {rightPts.length > 1 && (
             <polyline
               points={rightLine}
@@ -340,13 +340,13 @@ export function GraficoFuncionLimites() {
             />
           )}
 
-          {/* ── Limit points ── */}
+          {/* ── Puntos límite ── */}
           {isContinua ? (
-            // Both filled green
+            // Ambos rellenos de verde
             Number.isFinite(limIzquierda) && <circle cx={leftPt.sx} cy={leftPt.sy} r={6} fill="hsl(142 71% 45%)" stroke="white" strokeWidth={2} />
           ) : (
             <>
-              {/* Left limit: open circle */}
+              {/* Límite izquierdo: círculo abierto */}
               {Number.isFinite(limIzquierda) && <circle
                 cx={leftPt.sx}
                 cy={leftPt.sy}
@@ -355,7 +355,7 @@ export function GraficoFuncionLimites() {
                 stroke="var(--primary)"
                 strokeWidth={2.5}
               />}
-              {/* Right limit: filled */}
+              {/* Límite derecho: relleno */}
               {Number.isFinite(limDerecha) && <circle
                 cx={rightPt.sx}
                 cy={rightPt.sy}
@@ -367,7 +367,7 @@ export function GraficoFuncionLimites() {
             </>
           )}
 
-          {/* ── Limit value labels near points ── */}
+          {/* ── Etiquetas de valor de límite cerca de los puntos ── */}
           {!modoDefensa && Number.isFinite(limIzquierda) && (
             <text
               x={leftPt.sx - 10}
@@ -393,7 +393,7 @@ export function GraficoFuncionLimites() {
         </svg>
       </div>
 
-      {/* ── Legend ── */}
+      {/* ── Leyenda ── */}
       <div className="flex flex-wrap items-center gap-4 px-1 text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <span className="inline-block h-0.5 w-6 rounded bg-primary" />

@@ -1,6 +1,6 @@
 /**
  * @param n - Número al que calcular la raíz
- * @param tolerancia - Precisión de convergencia (default 1e-10)
+ * @param tolerancia - Precisión de convergencia (por defecto 1e-10)
  * @returns Raíz cuadrada aproximada de n
  */
 export function raizCuadrada(n: number, tolerancia: number = 1e-10): number {
@@ -98,8 +98,8 @@ export function puntosElipse(
  * @param a - Parámetro a
  * @param b - Parámetro b
  * @param horizontal - true si es horizontal (ramas a izquierda/derecha), false si es vertical
- * @param rango - Rango de x para calcular puntos (default 50)
- * @param paso - Incremento en x entre puntos (default 0.1)
+ * @param rango - Rango de x para calcular puntos (por defecto 50)
+ * @param paso - Incremento en x entre puntos (por defecto 0.1)
  * @returns Array de puntos {x, y} para las dos ramas
  */
 export function puntosHiperbola(
@@ -184,8 +184,8 @@ export function puntosHiperbola(
  * @param k - Vértice y
  * @param p - Parámetro focal (distancia vértice a foco)
  * @param vertical - true si eje es vertical (apertura arriba/abajo), false si es horizontal
- * @param rango - Rango de variable independiente (default 50)
- * @param paso - Incremento entre puntos (default 0.1)
+ * @param rango - Rango de variable independiente (por defecto 50)
+ * @param paso - Incremento entre puntos (por defecto 0.1)
  * @returns Array de puntos {x, y} para la parábola
  */
 export function puntosParabola(

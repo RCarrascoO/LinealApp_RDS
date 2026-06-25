@@ -189,7 +189,7 @@ export function CamposDefensa({ resultado, coeficientes }: Props) {
     return null;
   }
 
-  // Helper for inline inputs in the formula template
+  // Componente auxiliar para inputs en línea en la plantilla de la fórmula
   function InlineCampo({
     keyName,
     placeholder,

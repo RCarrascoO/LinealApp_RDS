@@ -1,0 +1,54 @@
+src/lib/puntosGrafica.ts:  // Adivinanza inicial: n/2 es una buena aproximación inicial
+src/lib/puntosGrafica.ts:  // Iteraciones hasta convergencia: x_{n+1} = (x_n + n/x_n) / 2
+src/lib/puntosGrafica.ts:    // Nueva aproximación
+src/lib/puntosGrafica.ts:    // Verificar convergencia
+src/lib/puntosGrafica.ts:  // a es el semieje mayor, b es el semieje menor
+src/lib/puntosGrafica.ts:    // Rama izquierda (x <= h - a)
+src/lib/puntosGrafica.ts:    // Rama inferior (y <= k - a)
+src/lib/limites.ts:    // f(x) = (x-a)(x+a1)/(x-a)
+src/lib/limites.ts:    // Dos rectas: f1(x) = a1*x - b1, f2(x) = m*x + n
+src/lib/limites.ts:    // Infinita: f(x) = (n+1)/(x-a)
+src/lib/calcularCoeficientes.ts:  // JERARQUÍA ESTRICTA O FORZADA
+src/components/conics/pagina-conicas.tsx:  // Función para resetear todos los estados cuando el usuario limpia el RUT
+src/lib/rut.ts:  // El cuerpo del RUT chileno puede tener hasta 8 dígitos; para aplicar una serie
+src/lib/rut.ts:  // fija en Modulo 11 lo normalizamos a 8 posiciones con ceros a la izquierda.
+src/lib/rut.ts:  // Multiplicadores Modulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
+src/lib/rut.ts:  // [2, 3, 4, 5, 6, 7, 2, 3] en orden invertido (de d8 a d1)
+src/lib/rut.ts:  // espera, la lógica original:
+src/lib/rut.ts:  // for (let i = 7; i >= 0; i--) { multiplicador = multiplicadores[7 - i] }
+src/lib/rut.ts:  // si multiplicadores = [2, 3, 4, 5, 6, 7, 2, 3], entonces:
+src/lib/rut.ts:  // i=7 -> mult[0]=2
+src/lib/rut.ts:  // i=6 -> mult[1]=3
+src/lib/rut.ts:  // i=5 -> mult[2]=4
+src/lib/rut.ts:  // i=4 -> mult[3]=5
+src/lib/rut.ts:  // i=3 -> mult[4]=6
+src/lib/rut.ts:  // i=2 -> mult[5]=7
+src/lib/rut.ts:  // i=1 -> mult[6]=2
+src/lib/rut.ts:  // i=0 -> mult[7]=3
+src/components/GraficaConica.tsx:  // Extraer parámetros de la forma canónica
+src/components/GraficaConica.tsx:    // Determinar orientación directamente desde formaCanonica para evitar closures obsoletos
+src/components/GraficaConica.tsx:    // Asíntotas: pendiente depende del eje
+src/components/GraficaConica.tsx:    // Horizontal: y = ±(b/a)(x-h)+k  |  Vertical: y = ±(a/b)(x-h)+k
+src/components/GraficaConica.tsx:    // Foco
+src/components/GraficaConica.tsx:    // Directriz
+src/components/GraficaConica.tsx:    // Orientación para etiquetas usando attach (píxeles en pantalla, inmune al zoom)
+src/components/GraficaConica.tsx:    // Ponemos el vértice y el foco en lados opuestos (ej. izquierda vs derecha)
+src/components/GraficaConica.tsx:    // para que jamás colisionen cuando el zoom los acerque mucho en pantalla.
+src/components/SidebarContext.tsx:    // Configuración inicial basada en la pantalla
+src/components/CamposDefensa.tsx:  // Componente auxiliar para inputs en línea en la plantilla de la fórmula
+src/components/limites/modo-defensa-limites.tsx:  // No autocompletar en un nuevo análisis, comenzar vacío para el modo defensa
+src/components/limites/modo-defensa-limites.tsx:    // Limpiar error al editar
+src/components/limites/modo-defensa-limites.tsx:    // Comparación numérica con tolerancia para decimales
+src/components/limites/grafico-funcion-limites.tsx:// ─── Funciones auxiliares matemáticas ─────────────────────────────────────────
+src/components/limites/grafico-funcion-limites.tsx:    // por defecto
+src/components/limites/grafico-funcion-limites.tsx:// ─── Auxiliares de coordenadas SVG ──────────────────────────────────────────
+src/components/limites/grafico-funcion-limites.tsx:      // Limitar Y fuertemente para que no rompa el viewBox del SVG si es asintótica
+src/components/limites/grafico-funcion-limites.tsx:// ─── Componente ───────────────────────────────────────────────────────────────
+src/components/limites/grafico-funcion-limites.tsx:    // Limitar el rango Y fuertemente si es infinita para evitar perder el zoom
+src/components/limites/grafico-funcion-limites.tsx:  // Convertir los puntos de la función a cadenas para polyline
+src/components/limites/grafico-funcion-limites.tsx:  // Línea vertical crítica x = a
+src/components/limites/grafico-funcion-limites.tsx:  // Eje X (y = 0) — limitar si 0 no está en el rango
+src/components/limites/grafico-funcion-limites.tsx:  // Puntos de límite
+src/components/limites/grafico-funcion-limites.tsx:  // Etiquetas del eje X
+src/components/limites/grafico-funcion-limites.tsx:  // Etiquetas del eje Y (5 espaciadas uniformemente)
+src/components/limites/grafico-funcion-limites.tsx:            // Ambos rellenos de verde

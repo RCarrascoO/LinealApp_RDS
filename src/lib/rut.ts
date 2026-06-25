@@ -40,9 +40,9 @@ export function validarRUT(rut: string): ValidacionRutResult {
   // Multiplicadores Modulo 11 aplicados de derecha a izquierda sobre 8 posiciones.
   // [2, 3, 4, 5, 6, 7, 2, 3] en orden invertido (de d8 a d1)
   const multiplicadoresArray = [3, 2, 7, 6, 5, 4, 3, 2]; // Ojo: pos 7 usa 2, pos 6 usa 3, pos 5 usa 4... wait.
-  // wait, the original logic:
+  // espera, la lógica original:
   // for (let i = 7; i >= 0; i--) { multiplicador = multiplicadores[7 - i] }
-  // if multiplicadores = [2, 3, 4, 5, 6, 7, 2, 3], then:
+  // si multiplicadores = [2, 3, 4, 5, 6, 7, 2, 3], entonces:
   // i=7 -> mult[0]=2
   // i=6 -> mult[1]=3
   // i=5 -> mult[2]=4

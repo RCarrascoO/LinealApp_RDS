@@ -26,7 +26,7 @@ export function calcularLimites(digitos: number[], v: number): ResultadoLimites 
   const a2 = digitos[1];
   const b1 = digitos[2];
   let m = digitos[3];
-  if (m === 0) m = 1; // Avoid trivial function
+  if (m === 0) m = 1; // Evitar función trivial
   const n = digitos[4];
 
   const d8 = digitos[7];
