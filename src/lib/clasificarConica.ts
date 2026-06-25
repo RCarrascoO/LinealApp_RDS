@@ -90,12 +90,17 @@ export function clasificarConica(A: number, B: number, C: number, D: number, E: 
       ? [{ x: h - a, y: k }, { x: h + a, y: k }]
       : [{ x: h, y: k - b }, { x: h, y: k + b }];
 
+    const coVertices = esHorizontal
+      ? [{ x: h, y: k - b }, { x: h, y: k + b }]
+      : [{ x: h - a, y: k }, { x: h + a, y: k }];
+
     formaCanonica = {
       centro: { h, k },
       a,
       b,
       focos,
       vertices,
+      coVertices,
       eje: esHorizontal ? 'horizontal' : 'vertical'
     };
 

@@ -40,7 +40,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
         break;
       }
       case 'elipse': {
-        const a = formaCanonica.semiEjeMayor ?? 5;
+        const a = Math.max(formaCanonica.a ?? 5, formaCanonica.b ?? 5);
         maxDim = a + 2;
         break;
       }

@@ -145,6 +145,8 @@ export function CamposDefensa({ resultado, coeficientes }: Props) {
       const foco2 = forma.focos?.[1] ?? { x: 0, y: 0 };
       const vertice1 = forma.vertices?.[0] ?? { x: 0, y: 0 };
       const vertice2 = forma.vertices?.[1] ?? { x: 0, y: 0 };
+      const coVertice1 = forma.coVertices?.[0] ?? { x: 0, y: 0 };
+      const coVertice2 = forma.coVertices?.[1] ?? { x: 0, y: 0 };
 
       registrar('foco1X', esCercano(normalizarNumero(valores.foco1X ?? ''), foco1.x), formatearNumero(foco1.x));
       registrar('foco1Y', esCercano(normalizarNumero(valores.foco1Y ?? ''), foco1.y), formatearNumero(foco1.y));
@@ -155,6 +157,13 @@ export function CamposDefensa({ resultado, coeficientes }: Props) {
       registrar('vertice1Y', esCercano(normalizarNumero(valores.vertice1Y ?? ''), vertice1.y), formatearNumero(vertice1.y));
       registrar('vertice2X', esCercano(normalizarNumero(valores.vertice2X ?? ''), vertice2.x), formatearNumero(vertice2.x));
       registrar('vertice2Y', esCercano(normalizarNumero(valores.vertice2Y ?? ''), vertice2.y), formatearNumero(vertice2.y));
+
+      if (tipo === 'elipse') {
+        registrar('coVertice1X', esCercano(normalizarNumero(valores.coVertice1X ?? ''), coVertice1.x), formatearNumero(coVertice1.x));
+        registrar('coVertice1Y', esCercano(normalizarNumero(valores.coVertice1Y ?? ''), coVertice1.y), formatearNumero(coVertice1.y));
+        registrar('coVertice2X', esCercano(normalizarNumero(valores.coVertice2X ?? ''), coVertice2.x), formatearNumero(coVertice2.x));
+        registrar('coVertice2Y', esCercano(normalizarNumero(valores.coVertice2Y ?? ''), coVertice2.y), formatearNumero(coVertice2.y));
+      }
 
       registrar('a', esCercano(normalizarNumero(valores.a ?? ''), forma.a ?? 0), formatearNumero(forma.a ?? 0));
       registrar('b', esCercano(normalizarNumero(valores.b ?? ''), forma.b ?? 0), formatearNumero(forma.b ?? 0));
@@ -405,6 +414,18 @@ export function CamposDefensa({ resultado, coeficientes }: Props) {
               <Campo label="Vértice 2: y" value={valores.vertice2Y ?? ''} onChange={(valor) => actualizar('vertice2Y', valor)} status={verificado ? resultadoCampos.vertice2Y : undefined} />
             </div>
           </div>
+
+          {tipo === 'elipse' && (
+            <div className="border-t border-border/50 pt-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3">Co-Vértices (Eje Menor)</h4>
+              <div className="grid gap-4 sm:grid-cols-4">
+                <Campo label="Co-Vértice 1: x" value={valores.coVertice1X ?? ''} onChange={(valor) => actualizar('coVertice1X', valor)} status={verificado ? resultadoCampos.coVertice1X : undefined} />
+                <Campo label="Co-Vértice 1: y" value={valores.coVertice1Y ?? ''} onChange={(valor) => actualizar('coVertice1Y', valor)} status={verificado ? resultadoCampos.coVertice1Y : undefined} />
+                <Campo label="Co-Vértice 2: x" value={valores.coVertice2X ?? ''} onChange={(valor) => actualizar('coVertice2X', valor)} status={verificado ? resultadoCampos.coVertice2X : undefined} />
+                <Campo label="Co-Vértice 2: y" value={valores.coVertice2Y ?? ''} onChange={(valor) => actualizar('coVertice2Y', valor)} status={verificado ? resultadoCampos.coVertice2Y : undefined} />
+              </div>
+            </div>
+          )}
         </div>
       );
     }
