@@ -17,12 +17,12 @@ A continuación se detallan las tareas de prueba para el módulo de Cónicas, di
 
 ### 👤 Persona 2 (Renato) (Frontend) — Pruebas de Parábola (Vertical y Horizontal)
 **Objetivo:** Verificar las dos orientaciones posibles de la parábola y sus elementos geométricos.
-- [ ] **Caso de prueba 3 (Parábola Vertical):** Encontrar e ingresar un RUT válido donde `d5+d6` sea múltiplo de 3 y `d7` sea par.
-- [ ] Verificar que la parábola abra hacia arriba o hacia abajo en el eje Y.
-- [ ] Comprobar que el gráfico muestre correctamente el **Foco** (punto) y la **Directriz** (línea punteada horizontal).
-- [ ] **Caso de prueba 4 (Parábola Horizontal):** Encontrar e ingresar un RUT válido donde `d5+d6` sea múltiplo de 3 y `d7` sea impar.
-- [ ] Verificar que la parábola abra hacia la izquierda o derecha en el eje X, con su respectiva Directriz (línea punteada vertical).
-- [ ] En el panel de Defensa Oral, probar forzar un error ingresando coordenadas invertidas y validar los mensajes de retroalimentación.
+- [x] **Caso de prueba 3 (Parábola Vertical):** Encontrar e ingresar un RUT válido donde `d5+d6` sea múltiplo de 3 y `d7` sea par.
+- [x] Verificar que la parábola abra hacia arriba o hacia abajo en el eje Y.
+- [x] Comprobar que el gráfico muestre correctamente el **Foco** (punto) y la **Directriz** (línea punteada horizontal).
+- [x] **Caso de prueba 4 (Parábola Horizontal):** Encontrar e ingresar un RUT válido donde `d5+d6` sea múltiplo de 3 y `d7` sea impar.
+- [x] Verificar que la parábola abra hacia la izquierda o derecha en el eje X, con su respectiva Directriz (línea punteada vertical).
+- [x] En el panel de Defensa Oral, probar forzar un error ingresando coordenadas invertidas y validar los mensajes de retroalimentación.
 
 ### 👤 Persona 3 (Daniel) (Matemático/UX) — Pruebas de Hipérbola y Casos Borde
 **Objetivo:** Verificar la hipérbola y el sistema de jerarquía de reglas ante colisiones.

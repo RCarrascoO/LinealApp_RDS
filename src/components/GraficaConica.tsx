@@ -398,6 +398,17 @@ export function GraficaConica({ resultado, toggles, modoDefensa, zoom }: Props) 
     const directrizX = esVertical ? h : h - p;
     const directrizY = esVertical ? k - p : k;
 
+    // Orientación para etiquetas usando attach (píxeles en pantalla, inmune al zoom)
+    // Ponemos el vértice y el foco en lados opuestos (ej. izquierda vs derecha)
+    // para que jamás colisionen cuando el zoom los acerque mucho en pantalla.
+    const vertAttach = esVertical 
+      ? (p >= 0 ? "sw" : "nw") 
+      : (p >= 0 ? "sw" : "se");
+      
+    const focAttach = esVertical
+      ? (p >= 0 ? "ne" : "se")
+      : (p >= 0 ? "ne" : "nw");
+
     return (
       <>
         {/* Parábola */}
@@ -443,7 +454,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa, zoom }: Props) 
           <>
             <Point x={h} y={k} color="#f97316" />
             {!modoDefensa && (
-              <Text x={h} y={k + 0.8} size={12} color="#f97316">
+              <Text x={h} y={k} attach={vertAttach} attachDistance={15} size={12} color="#f97316">
                 V({h.toFixed(1)}, {k.toFixed(1)})
               </Text>
             )}
@@ -455,7 +466,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa, zoom }: Props) 
           <>
             <Point x={focoX} y={focoY} color="#dc2626" />
             {!modoDefensa && (
-              <Text x={focoX + 0.5} y={focoY + 0.8} size={11} color="#dc2626">
+              <Text x={focoX} y={focoY} attach={focAttach} attachDistance={15} size={11} color="#dc2626">
                 F({focoX.toFixed(1)}, {focoY.toFixed(1)})
               </Text>
             )}

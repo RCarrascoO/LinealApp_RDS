@@ -445,7 +445,7 @@ export function CamposDefensa({ resultado, coeficientes }: Props) {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Campo label="Parámetro p" value={valores.p ?? ''} onChange={(valor) => actualizar('p', valor)} status={verificado ? resultadoCampos.p : undefined} />
-            <Campo label="Directriz" value={valores.directriz ?? ''} onChange={(valor) => actualizar('directriz', valor)} status={verificado ? resultadoCampos.directriz : undefined} placeholder={forma.directriz ?? 'x = ___ / y = ___'} />
+            <Campo label="Directriz" value={valores.directriz ?? ''} onChange={(valor) => actualizar('directriz', valor)} status={verificado ? resultadoCampos.directriz : undefined} placeholder="Ej: x = 5" />
           </div>
         </div>
       );
