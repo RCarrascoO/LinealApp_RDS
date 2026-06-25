@@ -14,12 +14,13 @@ interface Props {
   resultado: ConicaResult;
   toggles?: Record<string, boolean>;
   modoDefensa?: boolean;
+  zoom?: number;
 }
 
 /**
  * Componente que renderiza la gráfica de una cónica usando Mafs
  */
-export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
+export function GraficaConica({ resultado, toggles, modoDefensa, zoom }: Props) {
   const { tipo, formaCanonica } = resultado;
 
   // Extraer parámetros de la forma canónica
@@ -57,11 +58,14 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
       }
     }
 
+    const currentZoom = zoom ?? 1;
+    const halfWidth = (maxDim + margin) * currentZoom;
+
     return {
-      xMin: h - maxDim - margin,
-      xMax: h + maxDim + margin,
-      yMin: k - maxDim - margin,
-      yMax: k + maxDim + margin
+      xMin: h - halfWidth,
+      xMax: h + halfWidth,
+      yMin: k - halfWidth,
+      yMax: k + halfWidth
     };
   }
 
@@ -481,11 +485,7 @@ export function GraficaConica({ resultado, toggles, modoDefensa }: Props) {
 
   return (
     <div className="academic-card space-y-4">
-      <div className="flex justify-end gap-2 text-xs font-semibold text-muted-foreground">
-        <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
-        <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
-        <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
-      </div>
+
 
       <div className="relative h-96 w-full overflow-hidden rounded-xl border border-border bg-muted graph-grid">
         <Mafs

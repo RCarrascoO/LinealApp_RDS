@@ -19,6 +19,11 @@ export function PanelGraficaConicas({ resultado }: Props) {
 
   const [toggleStates, setToggleStates] = useState<Record<string, boolean>>(Object.fromEntries(graphToggles.map(t => [t.id, t.defaultChecked])));
   const [modoDefensa, setModoDefensa] = useState(true);
+  const [zoom, setZoom] = useState(1);
+
+  const handleZoomIn = () => setZoom(z => Math.max(0.2, z - 0.2));
+  const handleZoomOut = () => setZoom(z => Math.min(5, z + 0.2));
+  const handleZoomReset = () => setZoom(1);
 
   return (
     <section className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:sticky lg:top-6 flex flex-col">
@@ -38,9 +43,9 @@ export function PanelGraficaConicas({ resultado }: Props) {
             <span className="font-medium text-primary">Modo Defensa</span>
           </label>
           <div className="flex gap-2 text-xs font-semibold text-muted-foreground">
-            <span className="rounded-full border border-border bg-muted px-2.5 py-1">+</span>
-            <span className="rounded-full border border-border bg-muted px-2.5 py-1">−</span>
-            <span className="rounded-full border border-border bg-muted px-2.5 py-1">↺</span>
+            <button onClick={handleZoomIn} className="rounded-full border border-border bg-muted px-2.5 py-1 hover:bg-muted-foreground/20 active:bg-muted-foreground/30 transition-colors cursor-pointer">+</button>
+            <button onClick={handleZoomOut} className="rounded-full border border-border bg-muted px-2.5 py-1 hover:bg-muted-foreground/20 active:bg-muted-foreground/30 transition-colors cursor-pointer">−</button>
+            <button onClick={handleZoomReset} className="rounded-full border border-border bg-muted px-2.5 py-1 hover:bg-muted-foreground/20 active:bg-muted-foreground/30 transition-colors cursor-pointer">↺</button>
           </div>
         </div>
       </div>
@@ -48,7 +53,7 @@ export function PanelGraficaConicas({ resultado }: Props) {
       {resultado ? (
         <>
           <div className="transition-opacity">
-            <GraficaConica resultado={resultado} toggles={toggleStates} modoDefensa={modoDefensa} />
+            <GraficaConica resultado={resultado} toggles={toggleStates} modoDefensa={modoDefensa} zoom={zoom} />
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4 pt-2 border-t border-border/50">
